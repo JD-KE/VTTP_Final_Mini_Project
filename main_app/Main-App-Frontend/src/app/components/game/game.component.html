@@ -1,0 +1,80 @@
+<mat-dialog-content>
+    <ng-container *ngIf="!isDialog">
+        <button [routerLink]="['/game']">Back to search</button>
+    </ng-container>
+
+    <div *ngIf="gameP$ |async as game; else noGame">
+        <ng-container *ngIf="isDialog && !inEventGameStore">
+            <button type="button" (click)="addGameToStore(game)">
+                Add to Event
+            </button>
+        </ng-container>
+        <ng-container *ngIf="isDialog && inEventGameStore">
+            <button type="button" (click)="removeGameFromStore(game.id)">
+                Remove from Event
+            </button>
+        </ng-container>
+        <div>
+            <ng-container *ngIf="!!game.coverUrl; else noImage">
+                <img [src]="game.coverUrl" alt="Cover for game">
+            </ng-container>
+            <ng-template #noImage>
+                <img src="/assets/no-image-icon.png" alt="No image found">
+            </ng-template>
+            <h1>{{game.name}}</h1>
+        </div>
+        <hr>
+        <div>
+            <p>First Release Date: {{game.first_release_date|date}}</p>
+            <p>Game Status: {{GameStatus[game.status].replace('_',' ') |titlecase}}</p>
+            <p>{{GameCategory[game.category].replace('_',' ') | titlecase}}
+                <ng-container *ngIf="!!game.parent_game">
+                    <ng-container *ngIf="!!isDialog">
+                        <span>of {{game.parent_game.name}} 
+                            <span *ngIf="!!game.parent_game.first_release_date">
+                                ({{game.parent_game.first_release_date|date:'y'}})
+                            </span>
+                        </span>
+                    </ng-container>
+                    <ng-container *ngIf="!!!isDialog">
+                        <span>of <a [routerLink]="['/game', game.parent_game.id]">
+                            {{game.parent_game.name}} 
+                            <span *ngIf="!!game.parent_game.first_release_date">
+                                ({{game.parent_game.first_release_date|date:'y'}})
+                            </span></a>
+                        </span>
+                    </ng-container>
+                    
+                </ng-container>
+            </p>
+            <ng-container *ngIf="!!game.version_parent">
+                <p>
+                    {{game.version_title || 'Edition/Version'}} of {{game.version_parent.name}} 
+                    <span *ngIf="!!game.version_parent.first_release_date">
+                        ({{game.version_parent.first_release_date|date:'y'}})
+                    </span>
+                </p>
+            </ng-container>
+        </div>
+        <hr>
+        <div>
+            <ng-container *ngIf="!!game.summary">
+                <h3>Summary</h3>
+                
+                <p>{{game.summary}}</p>
+                <hr>
+            </ng-container>
+            <ng-container *ngIf="!!game.storyline">
+                <h3>Storyline</h3>
+                
+                <p>{{game.storyline}}</p>
+                <hr>
+            </ng-container>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<ng-template #noGame>
+    <h2>Game not found</h2>
+</ng-template>

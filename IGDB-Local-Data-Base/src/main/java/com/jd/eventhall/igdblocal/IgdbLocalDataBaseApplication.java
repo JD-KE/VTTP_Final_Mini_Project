@@ -23,15 +23,16 @@ public class IgdbLocalDataBaseApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// gameSvc.createGameDB();
-		// gameSvc.createCoverDB();
-		// gameSvc.createReleaseDateDB();
-		// gameSvc.createPlatformDB();
-		// can make db on run
 		webhookSvc.createGameWebhooks();
 		webhookSvc.createCoverWebhooks();
 		webhookSvc.createReleaseDateWebhooks();
 		webhookSvc.createPlatformWebhooks();
+		gameSvc.createGameDB();
+		gameSvc.createCoverDB();
+		gameSvc.createReleaseDateDB();
+		gameSvc.createPlatformDB();
+		// can make db on run
+		
 	}
 
 }

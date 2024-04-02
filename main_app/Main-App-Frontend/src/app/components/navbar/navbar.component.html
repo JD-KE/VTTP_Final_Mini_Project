@@ -1,0 +1,12 @@
+<nav>
+    <a mat-flat-button 
+    [color]="rlahome.isActive ? 'primary':null" [routerLink]="['/home']" 
+    routerLinkActive="active" ariaCurrentWhenActive="page"
+     #rlahome="routerLinkActive">Home</a>
+    <a mat-flat-button [color]="rlagame.isActive ? 'primary':null" 
+    [routerLink]="['/game']" routerLinkActive="active" ariaCurrentWhenActive="page" 
+     #rlagame="routerLinkActive">Games</a>
+    <a mat-flat-button [color]="rlaevent.isActive ? 'primary':null" 
+    [routerLink]="['/event']" routerLinkActive="active" ariaCurrentWhenActive="page" 
+    #rlaevent="routerLinkActive" [routerLinkActiveOptions]="{exact:false}">Events</a>
+</nav>

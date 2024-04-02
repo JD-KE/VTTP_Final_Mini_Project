@@ -1,0 +1,38 @@
+<p>register works!</p>
+
+<div>
+    <form [formGroup]="form" (submit)="processForm()">
+        <table>
+            <tr>
+                <td><label for="email">Email:</label></td>
+                <td>
+                    <input type="email" id="email" formControlName="email">
+                </td>
+            </tr>
+            <tr>
+                <td><label for="username">Username:</label></td>
+                <td>
+                    <input type="text" id="username" formControlName="username">
+                </td>
+            </tr>
+            <tr>
+                <td><label for="password">Password:</label></td>
+                <td>
+                    <input type="password" id="password" formControlName="password">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    Already have an account? <a [routerLink]="['/Login']">Login.</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

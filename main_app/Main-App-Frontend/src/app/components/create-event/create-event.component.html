@@ -1,0 +1,104 @@
+<p>create-event works!</p>
+
+<form [formGroup]="form" (submit)="processBooking()">
+    <table border="1px">
+        <tr>
+            <td>
+                <label for="eventName">Event Name:</label>
+            </td>
+            <td>
+                <input type="text" id="eventName" formControlName="name">
+                <p *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                    Name Required
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="eventDescription">Event Description:</label>
+            </td>
+            <td>
+                <textarea name="" id="eventDescription"
+                 cols="30" rows="5" formControlName="description">
+                </textarea>
+                <p *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+                    Description Required
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="startTime">Start DateTime:</label>
+            </td>
+            <td>
+                <input type="datetime-local" step="300" id="startTime" formControlName="startTime">
+                <p *ngIf="form.get('startTime')?.getError('required') 
+                && form.get('startTime')?.touched">
+                    Start DateTime Required
+                </p>
+                <p *ngIf="form.getError('laterThanOrEqualToCurrentDateTime','startTime')
+                 && form.get('startTime')?.touched">
+                    Start DateTime Should not be Before Current DateTime
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="endTime">End DateTime:</label>
+            </td>
+            <td>
+                <input type="datetime-local" step="300" id="endTime" formControlName="endTime">
+                <p *ngIf="form.get('startTime')?.getError('required') 
+                && form.get('startTime')?.touched">
+                    End DateTime Required
+                </p>
+                <p *ngIf="form.getError('laterThanOrEqualToCurrentDateTime','endTime')
+                 && form.get('endTime')?.touched">
+                    End DateTime Should not be Before Current DateTime
+                </p>
+                <p *ngIf="form.getError('endLaterThanStart')
+                 && form.get('endTime')?.touched">
+                    End DateTime Should not be Before Start DateTime
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>Games:
+                
+            </td>
+            <td>
+                <button type="button" (click)="openSearch()">Add Games</button>
+                <div *ngIf="eventGames$ |async as games">
+                    <ng-container *ngFor="let game of games as GameSummary">
+                        <div><a (click)="getGame(game.id)">{{game.name}}</a>
+                            <button type="button" (click)="deleteGameFromStore(game.id)">X</button>
+                        </div>
+                    </ng-container>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="eventComments">Comments:</label>
+            </td>
+            <td>
+                <textarea name="" id="eventComments"
+                 cols="30" rows="5" formControlName="comments"></textarea>
+                
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button type="submit" [disabled]="form.invalid || !hasGame">Create Event</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+        {{form.get('startTime')?.errors | json}}
+    </p>
+    <p>
+        {{form.errors| json}}
+    </p>
+    
+</form>

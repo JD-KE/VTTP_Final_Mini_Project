@@ -1,0 +1,16 @@
+<!-- <button [routerLink]="['/event/create']" [disabled]="!isLoggedIn">Add event</button> -->
+<button [routerLink]="['/event/create']">Add event</button>
+<div *ngIf="!isLoggedIn">
+    <p>Please login to create a new event</p>
+    <button type="button" [routerLink]="['/login']">
+        Login
+    </button>
+</div>
+
+<div>
+    <h3>My Events</h3>
+</div>
+
+<div>
+    <h3>Public Events</h3>
+</div>
