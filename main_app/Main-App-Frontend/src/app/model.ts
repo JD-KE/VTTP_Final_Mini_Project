@@ -108,7 +108,7 @@ export enum GameReleaseStatus {
 }
 
 export interface User{
-    id:number,
+    
     username:string
 }
 
@@ -127,9 +127,8 @@ export interface EventBooking{
     id:string
     name:string
     description:string
-    comments:string
-    usersCreated:User
-    invitedUsers:User[]
+    details:string
+    userCreated:string
     games:GameSummary[]
     startTime:Date
     endTime:Date

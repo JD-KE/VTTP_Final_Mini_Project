@@ -15,7 +15,7 @@ import jakarta.json.Json;
 
 @RestController
 @RequestMapping("/api/game")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class GameController {
     @Autowired
     private GameService gameService;

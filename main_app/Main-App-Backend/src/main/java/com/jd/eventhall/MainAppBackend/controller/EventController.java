@@ -13,7 +13,7 @@ import com.jd.eventhall.MainAppBackend.service.EventService;
 
 @RestController
 @RequestMapping("/api/event")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class EventController {
     @Autowired
     private EventService eventSvc;

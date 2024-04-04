@@ -87,7 +87,7 @@ export class CreateEventComponent implements OnInit, OnDestroy{
       description: this.fb.control<string>('', [Validators.required,]),
       startTime: this.fb.control<string>('', [startDateLaterThanNow(),Validators.required] ),
       endTime: this.fb.control<string>('', [startDateLaterThanNow(),Validators.required,]),
-      comments: this.fb.control<string>('')
+      details: this.fb.control<string>('')
     },
     {validators:endLaterThanStart})
   }
@@ -99,7 +99,7 @@ export function startDateLaterThanNow(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const controlValue = control.value;
     const currentDateTime = new Date();
-    return (currentDateTime >= new Date(controlValue)) ? { laterThanOrEqualToCurrentDateTime: 
+    return (currentDateTime > new Date(controlValue)) ? { laterThanCurrentDateTime: 
       { value: true} } : null;
   };
 }

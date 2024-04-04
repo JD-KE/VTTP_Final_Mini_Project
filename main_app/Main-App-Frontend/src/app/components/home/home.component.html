@@ -1,4 +1,14 @@
 <p>home works!</p>
 
-<p>Logged in: {{isLoggedIn}}</p>
+<!-- <p>Logged in: {{isLoggedIn}}</p>
+<p *ngIf="!!user">User is: {{user}}</p>
+<button type="button" *ngIf="!!user" (click)="logout()">Logoff</button> -->
+
+<div *ngIf="!!user">
+    <p>Welcome back, {{user}}</p>
+    <button type="button" (click)="logout()">Logout</button>
+</div>
+<div *ngIf="!!!user">
+    <button type="button" [routerLink]="['/login']">Login</button>
+</div>
 

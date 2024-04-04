@@ -26,10 +26,7 @@ import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
-import proto.Cover;
 import proto.Game;
-import proto.Platform;
-import proto.ReleaseDate;
 
 @Service
 public class GameService {

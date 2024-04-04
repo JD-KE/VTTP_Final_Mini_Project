@@ -22,6 +22,7 @@ import { UserService } from './user.service';
 import { LoginComponent } from './components/login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { RegisterComponent } from './components/register/register.component';
+import { UserStore } from './user.store';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { RegisterComponent } from './components/register/register.component';
     provideAnimationsAsync(),
     GameService,
     EventGameStore,
-    UserService
+    UserService,
+    UserStore
   ],
   bootstrap: [AppComponent]
 })

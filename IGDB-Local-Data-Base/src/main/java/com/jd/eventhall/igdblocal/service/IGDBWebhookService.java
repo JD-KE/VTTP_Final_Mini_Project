@@ -1,8 +1,6 @@
 package com.jd.eventhall.igdblocal.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +24,9 @@ public class IGDBWebhookService {
     @Value("${application.igdb.proxy.api-key}")
     private String x_api_key;
 
+    @Value("${application.igdb.webhook.secret-key}")
+    private String secretKey;
+
     public void createGameWebhooks() {
         
         System.out.println("Making game endpoint webhooks first");
@@ -41,7 +42,7 @@ public class IGDBWebhookService {
         MultiValueMap <String, String> form = new LinkedMultiValueMap<>();
         form.add("url", webhookCreateUrl);
         form.add("method", "create");
-        form.add("secret", "testing1234");
+        form.add("secret", secretKey);
 
         RequestEntity<MultiValueMap <String, String>> req = RequestEntity
             .post(gameWebhookUrl)
@@ -115,7 +116,7 @@ public class IGDBWebhookService {
         MultiValueMap <String, String> form = new LinkedMultiValueMap<>();
         form.add("url", webhookCreateUrl);
         form.add("method", "create");
-        form.add("secret", "testing1234");
+        form.add("secret", secretKey);
 
         RequestEntity<MultiValueMap <String, String>> req = RequestEntity
             .post(coverWebhookUrl)
@@ -189,7 +190,7 @@ public class IGDBWebhookService {
         MultiValueMap <String, String> form = new LinkedMultiValueMap<>();
         form.add("url", webhookCreateUrl);
         form.add("method", "create");
-        form.add("secret", "testing1234");
+        form.add("secret", secretKey);
 
         RequestEntity<MultiValueMap <String, String>> req = RequestEntity
             .post(releaseDateWebhookUrl)
@@ -263,7 +264,7 @@ public class IGDBWebhookService {
         MultiValueMap <String, String> form = new LinkedMultiValueMap<>();
         form.add("url", webhookCreateUrl);
         form.add("method", "create");
-        form.add("secret", "testing1234");
+        form.add("secret", secretKey);
 
         RequestEntity<MultiValueMap <String, String>> req = RequestEntity
             .post(platformWebhookUrl)

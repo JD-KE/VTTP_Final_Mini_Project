@@ -20,7 +20,7 @@ import jakarta.json.JsonObject;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class AuthenticationController {
 
     @Autowired

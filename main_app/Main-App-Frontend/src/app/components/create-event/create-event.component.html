@@ -36,7 +36,7 @@
                 && form.get('startTime')?.touched">
                     Start DateTime Required
                 </p>
-                <p *ngIf="form.getError('laterThanOrEqualToCurrentDateTime','startTime')
+                <p *ngIf="form.getError('laterThanCurrentDateTime','startTime')
                  && form.get('startTime')?.touched">
                     Start DateTime Should not be Before Current DateTime
                 </p>
@@ -79,11 +79,11 @@
         </tr>
         <tr>
             <td>
-                <label for="eventComments">Comments:</label>
+                <label for="eventDetails">Details:</label>
             </td>
             <td>
-                <textarea name="" id="eventComments"
-                 cols="30" rows="5" formControlName="comments"></textarea>
+                <textarea name="" id="eventDetails"
+                 cols="30" rows="5" formControlName="details"></textarea>
                 
             </td>
         </tr>
