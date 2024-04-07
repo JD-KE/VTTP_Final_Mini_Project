@@ -64,6 +64,24 @@ public class UserRepo {
         return Optional.of(user);
     }
 
+    public Optional<User> getUserById(String id) {
+        
+        SqlRowSet rs = template.queryForRowSet(SQL_SELECT_USER_BY_ID, id);
+        
+		if (!rs.next()) {
+            return Optional.empty();
+        }
+
+        User user = new User(rs.getString("id"),
+            rs.getString("username"),
+            rs.getString("email"),
+            rs.getString("password"),
+            Role.USER
+        );
+        
+        return Optional.of(user);
+    }
+
     public User register(User user) {
         int rowsUpdated = template.update(SQL_INSERT_USER, 
             user.getId(),

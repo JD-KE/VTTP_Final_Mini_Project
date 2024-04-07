@@ -34,11 +34,11 @@
                 <input type="datetime-local" step="300" id="startTime" formControlName="startTime">
                 <p *ngIf="form.get('startTime')?.getError('required') 
                 && form.get('startTime')?.touched">
-                    Start DateTime Required
+                    Start Time Required
                 </p>
                 <p *ngIf="form.getError('laterThanCurrentDateTime','startTime')
                  && form.get('startTime')?.touched">
-                    Start DateTime Should not be Before Current DateTime
+                    Start Time Should not be Before Current Time
                 </p>
             </td>
         </tr>
@@ -50,15 +50,15 @@
                 <input type="datetime-local" step="300" id="endTime" formControlName="endTime">
                 <p *ngIf="form.get('startTime')?.getError('required') 
                 && form.get('startTime')?.touched">
-                    End DateTime Required
+                    End Time Required
                 </p>
                 <p *ngIf="form.getError('laterThanOrEqualToCurrentDateTime','endTime')
                  && form.get('endTime')?.touched">
-                    End DateTime Should not be Before Current DateTime
+                    End Time Should not be Before Current Time
                 </p>
                 <p *ngIf="form.getError('endLaterThanStart')
                  && form.get('endTime')?.touched">
-                    End DateTime Should not be Before Start DateTime
+                    End Time Should not be Before Start Time
                 </p>
             </td>
         </tr>

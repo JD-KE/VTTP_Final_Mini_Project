@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserLogin, UserRegister } from '../../model';
 import { UserService } from '../../user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { UserService } from '../../user.service';
 export class RegisterComponent {
   private fb = inject(FormBuilder)
   private userSvc = inject(UserService)
+  private router = inject(Router)
 
   form!:FormGroup
   loginSub!:Subscription
@@ -31,5 +33,6 @@ export class RegisterComponent {
   processForm() {
     const registerDetails = this.form.value as UserRegister
     this.userSvc.register(registerDetails)
+    this.router.navigate(['/'])
   }
 }

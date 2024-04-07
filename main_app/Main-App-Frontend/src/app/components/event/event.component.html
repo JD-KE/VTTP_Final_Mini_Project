@@ -1,0 +1,52 @@
+<p>event works!</p>
+
+<div *ngIf="eventP$ | async as event;else noEvent">
+    <table>
+        <tr>
+            <td>Event Name:</td>
+            <td>{{event.name}}</td>
+        </tr>
+        <tr>
+            <td>Created by:</td>
+            <td>{{event.userCreated}}</td>
+        </tr>
+        <tr>
+            <td>Event Description:</td>
+            <td>{{event.description}}</td>
+        </tr>
+        <tr>
+            <td>Start Time:</td>
+            <td>{{event.startTime | date:'medium'}}</td>
+        </tr>
+        <tr>
+            <td>End Time:</td>
+            <td>{{event.endTime | date:'medium'}}</td>
+        </tr>
+        <tr>
+            <td>Games:</td>
+            <td>
+                <table>
+                    <ng-container *ngFor="let game of event.games">
+                        <tr>
+                            <td>
+                                <img [src]="game.coverUrl" [alt]="game.name">
+                            </td>
+                            <td>
+                                {{game.name}}
+                            </td>
+                        </tr>
+                    </ng-container>
+                </table>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Details:</td>
+            <td>{{event.details}}</td>
+        </tr>
+    </table>
+</div>
+
+<ng-template #noEvent>
+    <h3>No such event exists</h3>
+</ng-template>

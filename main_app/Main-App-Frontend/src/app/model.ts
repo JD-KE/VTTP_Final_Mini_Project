@@ -123,7 +123,7 @@ export interface UserLogin{
     password:string
 }
 
-export interface EventBooking{
+export interface EventModel{
     id:string
     name:string
     description:string

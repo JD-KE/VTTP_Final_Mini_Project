@@ -68,10 +68,4 @@ export class EventGameStore extends ComponentStore<EventGames> {
             }
         )
 
-    // readonly getItemNoInCart = this.select(
-    //     (slice:EventGames) => {
-            
-    //         return slice.games.length
-    //     }
-    // )
 }

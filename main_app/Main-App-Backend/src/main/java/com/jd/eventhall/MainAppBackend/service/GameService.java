@@ -6,6 +6,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jd.eventhall.MainAppBackend.model.GameSummary;
 import com.jd.eventhall.MainAppBackend.repository.CoverRepo;
 import com.jd.eventhall.MainAppBackend.repository.GameRepo;
 import com.jd.eventhall.MainAppBackend.repository.PlatformRepo;
@@ -114,7 +115,5 @@ public class GameService {
         }
         return jsonObjectBuilder.build().toString();
     }
-
-    
     
 }

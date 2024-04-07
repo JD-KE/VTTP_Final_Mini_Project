@@ -3,10 +3,12 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 import { MatDialog } from '@angular/material/dialog';
 import { SearchGamesComponent } from '../search-games/search-games.component';
 import { EventGameStore } from '../../event-game.store';
-import { Observable, Subscription } from 'rxjs';
-import { EventBooking, GameSummary } from '../../model';
+import { Observable, Subscription, lastValueFrom } from 'rxjs';
+import { EventModel, GameSummary } from '../../model';
 import { EventService } from '../../event.service';
 import { GameComponent } from '../game/game.component';
+import { UserStore } from '../../user.store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-event',
@@ -18,8 +20,12 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   private dialog = inject(MatDialog);
   private eventGamesStore = inject(EventGameStore)
   private eventSvc = inject(EventService)
+  private userStore = inject(UserStore)
+  private router = inject(Router)
   
   form!:FormGroup
+  user!:string
+  userSub!:Subscription
   eventGames!:GameSummary[]
   eventGamesSub!:Subscription
   eventGames$!: Observable<GameSummary[]>
@@ -35,10 +41,18 @@ export class CreateEventComponent implements OnInit, OnDestroy{
         this.eventGames = eventGames
       }
     )
+
     this.hasEventGameSub = this.eventGamesStore.hasEventGames.subscribe(
       hasGame => this.hasGame = hasGame
-      )
-    }
+    )
+
+    this.userSub = this.userStore.getLoggedinUser.subscribe(
+      value => {
+        this.user = value
+      }
+    )
+  }
+
   ngOnDestroy(): void {
     this.hasEventGameSub.unsubscribe()
   }
@@ -60,13 +74,16 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   }
 
   processBooking() {
-    console.log(this.form.value)
-    var event:EventBooking = {
+    
+    var event:EventModel = {
       ...this.form.value,
       startTime: new Date(this.form.get('startTime')?.value).getTime(),
       endTime: new Date(this.form.get('endTime')?.value).getTime(),
+      userCreated:this.user,
       games:this.eventGames
-    } as EventBooking
+    } as EventModel
+
+    console.log(event)
 
     console.log(event.startTime)
     console.log(new Date(event.startTime).toDateString())
@@ -75,8 +92,12 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     
     this.createEventSub = this.eventSvc.createEvent(event).subscribe({
 
-    
-      next: value => console.log(value),
+      next: value => {
+        console.log(value)
+        alert('Event created')
+        this.eventGamesStore.clearEventGames()
+        this.router.navigate(['/event'])
+      },
       complete: () => this.createEventSub.unsubscribe()
     })
   }

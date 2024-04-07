@@ -69,6 +69,7 @@ public class JwtService {
                 .builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
+                .issuer("com.jd.eventhall")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), Jwts.SIG.HS256)

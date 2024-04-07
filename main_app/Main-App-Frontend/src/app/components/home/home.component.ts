@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy{
   userSub!: Subscription
   
   ngOnInit(): void {
-    this.userSvc.logBackIn()
+    // this.userSvc.logBackIn()
     this.userSub = this.userStore.getLoggedinUser.subscribe(
         value => {
           this.user = value
@@ -35,7 +35,6 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.userSvc.logout()
     this.isLoggedIn = !!this.userSvc.user
     this.user = this.userSvc.user
-    console.log(this.isLoggedIn)
   }
   
 }

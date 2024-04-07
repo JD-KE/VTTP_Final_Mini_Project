@@ -23,6 +23,8 @@ import { LoginComponent } from './components/login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { RegisterComponent } from './components/register/register.component';
 import { UserStore } from './user.store';
+import { EventComponent } from './components/event/event.component';
+import { EditEventComponent } from './components/edit-event/edit-event.component';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { UserStore } from './user.store';
     CreateEventComponent,
     EventsComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    EventComponent,
+    EditEventComponent
   ],
   imports: [
     BrowserModule,

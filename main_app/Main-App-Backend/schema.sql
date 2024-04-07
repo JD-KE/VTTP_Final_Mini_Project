@@ -29,17 +29,21 @@ create table tokens (
 create table events (
     id char(8) not null,
     name varchar(128) not null,
-    event_description text,
-    event_date_start DateTime not null,
-    event_date_end DateTime,
+    description text not null,
+    details text,
+    date_start bigint not null,
+    date_end bigint,
     user_created char(8),
     
     primary key(id),
-    constraint fk_user_id foreign key(user_created) references users(id)
+    constraint fk_user_id_for_events foreign key(user_created) references users(id)
 );
 
 create table eventgames (
+	id char(8) not null,
     game_id int not null,
+    game_name varchar(256),
+    game_cover_url varchar(256),
     event_id char(8) not null,
     
     

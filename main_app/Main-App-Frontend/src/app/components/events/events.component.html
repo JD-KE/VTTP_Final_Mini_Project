@@ -1,5 +1,5 @@
-<!-- <button [routerLink]="['/event/create']" [disabled]="!isLoggedIn">Add event</button> -->
-<button [routerLink]="['/event/create']">Add event</button>
+<button [routerLink]="['/event/create']" [disabled]="!isLoggedIn">Add event</button>
+<!-- <button [routerLink]="['/event/create']">Add event</button> -->
 <div *ngIf="!isLoggedIn">
     <p>Please login to create a new event</p>
     <button type="button" [routerLink]="['/login']">
@@ -9,8 +9,49 @@
 
 <div>
     <h3>My Events</h3>
+    <table>
+        <tr>
+            <th style="width: 20%;">
+                Name
+            </th>
+            <th style="width: 40%;">
+                Description
+            </th>
+            <th>
+                Start Time/End Time
+            </th>
+            <th>
+                Games
+            </th>
+            <th>
+                
+            </th>
+        </tr>
+        <hr>
+        <ng-container *ngFor="let event of userEventsP$ |async">
+            <tr>
+                <td>{{event.name}}</td>
+                <td>{{event.description}}</td>
+                <td>
+                    <p>{{event.startTime|date:'medium'}}</p>
+                    <p>{{event.endTime|date:'medium'}}</p>
+                </td>
+                <td >
+                    <ng-container *ngFor="let game of event.games">
+                        <p>{{game.name}}</p>
+                    </ng-container>
+                    
+                </td>
+                <td>
+                    <button type="button" [routerLink]="['/event',event.id]">View</button>
+                    <button type="button" [routerLink]="['/event/edit',event.id]">Edit</button>
+                </td>
+            </tr>
+            <hr>
+        </ng-container>
+    </table>
 </div>
 
-<div>
+<!-- <div>
     <h3>Public Events</h3>
-</div>
+</div> -->

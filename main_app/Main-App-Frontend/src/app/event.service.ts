@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../environments/environment';
-import { EventBooking } from './model';
+import { EventModel } from './model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,9 +15,20 @@ export class EventService {
 
   baseUrl:string = environment.backendBaseUrl;
 
-  createEvent(event:EventBooking):Observable<any> {
+  createEvent(event:EventModel):Observable<any> {
     const url:string = this.baseUrl + "/event/create"
 
     return this.http.post<any>(url, event)
+  }
+
+  getUserEvents():Observable<EventModel[]> {
+    const url = this.baseUrl + "/event/user"
+
+    return this.http.get<EventModel[]>(url)
+  }
+
+  getEventById(id:string):Observable<EventModel> {
+    const url = this.baseUrl.concat("/event/view",`/${id}`)
+    return this.http.get<EventModel>(url)
   }
 }

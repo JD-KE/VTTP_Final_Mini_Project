@@ -20,14 +20,28 @@ public class GameRepo {
     private MongoTemplate mongoTemplate;
     
     public List<Document> testSearchGamesByName(String searchString, int page, int limit) {
-        Query query = new TextQuery(TextCriteria.forDefaultLanguage().matchingPhrase(searchString).caseSensitive(false))
-            .sortByScore()
-            // .with(Sort.by(Direction.DESC, "rating")
-            // .and(Sort.by(Direction.DESC,"aggregated_rating")))
-            .with(Sort.by(new Sort.Order(Direction.DESC, "rating"),
-            new Sort.Order(Direction.DESC,"aggregated_rating"),
-            new Sort.Order(Direction.DESC, "first_release_date")))
-            .skip((page - 1)*limit).limit(limit);
+        // Query query = new TextQuery(TextCriteria.forDefaultLanguage()
+        //     .matchingPhrase(searchString)
+        //     .caseSensitive(false))
+        //     .sortByScore()
+        //     // .with(Sort.by(Direction.DESC, "rating")
+        //     // .and(Sort.by(Direction.DESC,"aggregated_rating")))
+        //     .with(Sort.by(
+        //         new Sort.Order(Direction.DESC, "rating"),
+        //         new Sort.Order(Direction.DESC,"aggregated_rating"),
+        //         new Sort.Order(Direction.DESC, "first_release_date")
+        //     ))
+        //     .skip((page - 1)*limit).limit(limit);
+        Query query = new Query()
+            .with(Sort.by(
+                new Sort.Order(Direction.DESC, "rating"),
+                new Sort.Order(Direction.DESC,"aggregated_rating"),
+                new Sort.Order(Direction.DESC, "first_release_date")
+            ))
+            .addCriteria(TextCriteria.forDefaultLanguage()
+                .matchingPhrase(searchString)
+                .caseSensitive(false)
+            ).skip((page - 1)*limit).limit(limit);
         
         // Query query = new Query(Criteria.where("name").regex(searchString, "i"));
         List<Document> docResults = mongoTemplate.find(query, Document.class, "game");

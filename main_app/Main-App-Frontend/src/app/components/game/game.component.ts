@@ -42,10 +42,10 @@ export class GameComponent implements OnInit, OnDestroy{
         map(params => params['gameId'])
       ).subscribe(
         value => {
-          console.log(value)
+          // console.log(value)
           this.id = value
           this.gameP$ = this.getGame(this.id)
-        })
+      })
     }
     
 
@@ -63,7 +63,7 @@ export class GameComponent implements OnInit, OnDestroy{
     this.eventGamesStore.addGameToEvent({
       id:game.id,
       name:game.name,
-      coverUrl:game.coverUrl
+      coverUrl:game.coverUrl.replace("t_cover_big", "t_thumb")
     } as GameSummary)
   }
 

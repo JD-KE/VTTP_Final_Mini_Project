@@ -33,8 +33,11 @@ public class SecurityConfiguration {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/api/auth/**",
-                "/api/game/**").permitAll()
+                .requestMatchers(
+                "/api/auth/**"
+                ,"/api/game/**"
+                // ,"/api/event/view/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
