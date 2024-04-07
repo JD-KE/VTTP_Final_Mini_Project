@@ -76,4 +76,19 @@ public class EventService {
 
         return event.getId();
     }
+
+    @Transactional(rollbackFor = EventModelException.class)
+    public void updateEvent(Event event) throws EventModelException {
+        eventRepo.updateEvent(event);
+        
+        eventRepo.deleteEventGames(event.getId());
+
+        for (GameSummary game: event.getGames()) {
+            String gameDbId = GenerateId.generateId();
+            while(eventRepo.eventGameDbIdExists(gameDbId)) {
+                gameDbId = GenerateId.generateId();
+            }
+            eventRepo.createEventGame(gameDbId,game,event.getId());
+        }
+    }
 }

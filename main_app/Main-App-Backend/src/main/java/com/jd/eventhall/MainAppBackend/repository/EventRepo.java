@@ -41,6 +41,20 @@ public class EventRepo {
             insert into eventgames(id,game_id,game_name,game_cover_url,event_id) values(?,?,?,?,?)
             """;
 
+    public static final String SQL_DELETE_EVENT_GAMES = """
+            delete from eventgames where event_id = ?
+            """;
+    
+    public static final String SQL_UPDATE_EVENT = """
+            update events set
+                name = ?,
+                description = ?,
+                details = ?,
+                date_start = ?,
+                date_end = ?
+                where id = ?
+            """;
+
     public Optional<Event> getEventsById(String id) {
         SqlRowSet rs = template.queryForRowSet(SQL_SELECT_EVENT_BY_ID, id);
         Event event;
@@ -107,6 +121,18 @@ public class EventRepo {
         if (rowsUpdated <= 0) throw new EventModelException("Event cannot be created");
     }
 
+    public void updateEvent(Event event) throws EventModelException {
+        int rowsUpdated = template.update(SQL_UPDATE_EVENT,
+            event.getName(),
+            event.getDescription(),
+            event.getDetails(),
+            event.getStartDate(),
+            event.getEndDate(),
+            event.getId()
+        );
+        if (rowsUpdated <= 0) throw new EventModelException("Event cannot be updated");
+    }
+
     public void createEventGame(String id, GameSummary game, String eventId) throws EventModelException {
         int rowsUpdated = template.update(SQL_INSERT_EVENT_GAME,
             id, 
@@ -115,6 +141,12 @@ public class EventRepo {
             game.getCoverUrl(),
             eventId);
         if (rowsUpdated <= 0) throw new EventModelException("Event games cannot be saved");
+    }
+
+    public void deleteEventGames(String eventId) throws EventModelException   {
+        int rowsUpdated = template.update(SQL_DELETE_EVENT_GAMES, eventId);
+
+        if (rowsUpdated <= 0) throw new EventModelException("Old event games was not deleted during event update");
     }
 
     public boolean idExists(String id) {

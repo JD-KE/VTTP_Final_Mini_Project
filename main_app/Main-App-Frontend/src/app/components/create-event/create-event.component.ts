@@ -8,7 +8,8 @@ import { EventModel, GameSummary } from '../../model';
 import { EventService } from '../../event.service';
 import { GameComponent } from '../game/game.component';
 import { UserStore } from '../../user.store';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-event',
@@ -22,6 +23,9 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   private eventSvc = inject(EventService)
   private userStore = inject(UserStore)
   private router = inject(Router)
+  private activatedRoute = inject(ActivatedRoute)
+  private datePipe = inject(DatePipe)
+  
   
   form!:FormGroup
   user!:string
@@ -32,8 +36,15 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   hasEventGameSub!:Subscription
   hasGame!:boolean
   createEventSub!:Subscription
+
+  id!:string
+  event!:EventModel
+  isEdit:boolean = false
+  updateEventSub!:Subscription
   
   ngOnInit(): void {
+    this.isEdit = this.router.url.includes('edit')
+
     this.form = this.createForm();
     this.eventGames$ = this.eventGamesStore.getEventGames
     this.eventGamesSub = this.eventGames$.subscribe(
@@ -51,10 +62,25 @@ export class CreateEventComponent implements OnInit, OnDestroy{
         this.user = value
       }
     )
+
+    if (this.isEdit) {
+      this.id = this.activatedRoute.snapshot.params['eventId']
+      lastValueFrom(this.eventSvc.getEventById(this.id))
+        .then(value => {
+
+          this.form.patchValue(value)
+          this.form.controls['startTime'].patchValue(this.datePipe.transform(value.startTime, 'yyyy-MM-ddTHH:mm'))
+          this.form.controls['endTime'].patchValue(this.datePipe.transform(value.endTime, 'yyyy-MM-ddTHH:mm'))
+          this.eventGamesStore.addAllEventGamesFromExistingEvent(value.games)
+        })
+    }
+    
   }
 
   ngOnDestroy(): void {
     this.hasEventGameSub.unsubscribe()
+    this.createEventSub?.unsubscribe()
+    this.updateEventSub?.unsubscribe()
   }
   
   getGame(id:number) {
@@ -83,23 +109,41 @@ export class CreateEventComponent implements OnInit, OnDestroy{
       games:this.eventGames
     } as EventModel
 
-    console.log(event)
+    // console.log(event)
 
-    console.log(event.startTime)
-    console.log(new Date(event.startTime).toDateString())
-    console.log(new Date(event.startTime).toISOString())
-    console.log(new Date(event.startTime).toLocaleString())
+    // console.log(event.startTime)
+    // console.log(new Date(event.startTime).toDateString())
+    // console.log(new Date(event.startTime).toISOString())
+    // console.log(new Date(event.startTime).toLocaleString())
+
+    if(!this.isEdit){
+      this.createEventSub = this.eventSvc.createEvent(event).subscribe({
+        next: value => {
+          console.log(value)
+          alert('Event created')
+          this.eventGamesStore.clearEventGames()
+          this.router.navigate(['/event'])
+        },
+        complete: () => this.createEventSub.unsubscribe()
+      })
+    } else {
+      event = {
+        ...event,
+        id: this.id
+      }
+
+      this.updateEventSub = this.eventSvc.updateEvent(event).subscribe({
+        next: value => {
+          console.log(value)
+          alert('Event updated')
+          this.eventGamesStore.clearEventGames()
+          this.router.navigate(['/event',this.id])
+        },
+        complete: () => this.updateEventSub.unsubscribe()
+      })
+    }
     
-    this.createEventSub = this.eventSvc.createEvent(event).subscribe({
-
-      next: value => {
-        console.log(value)
-        alert('Event created')
-        this.eventGamesStore.clearEventGames()
-        this.router.navigate(['/event'])
-      },
-      complete: () => this.createEventSub.unsubscribe()
-    })
+    
   }
 
   createForm() {

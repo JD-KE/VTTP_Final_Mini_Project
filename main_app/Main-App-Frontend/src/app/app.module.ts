@@ -24,7 +24,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { RegisterComponent } from './components/register/register.component';
 import { UserStore } from './user.store';
 import { EventComponent } from './components/event/event.component';
-import { EditEventComponent } from './components/edit-event/edit-event.component';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -38,8 +38,7 @@ import { EditEventComponent } from './components/edit-event/edit-event.component
     EventsComponent,
     LoginComponent,
     RegisterComponent,
-    EventComponent,
-    EditEventComponent
+    EventComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +74,8 @@ import { EditEventComponent } from './components/edit-event/edit-event.component
     GameService,
     EventGameStore,
     UserService,
-    UserStore
+    UserStore,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

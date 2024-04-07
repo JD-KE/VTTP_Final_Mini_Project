@@ -90,15 +90,17 @@
         <tr>
             <td></td>
             <td>
-                <button type="submit" [disabled]="form.invalid || !hasGame">Create Event</button>
+                <button type="submit" [disabled]="form.invalid || !hasGame">
+                    {{isEdit ? 'Save Changes' : 'Create Event'}}
+                </button>
             </td>
         </tr>
     </table>
-    <p>
+    <!-- <p>
         {{form.get('startTime')?.errors | json}}
     </p>
     <p>
         {{form.errors| json}}
-    </p>
+    </p> -->
     
 </form>

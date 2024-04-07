@@ -20,6 +20,12 @@ export class EventService {
 
     return this.http.post<any>(url, event)
   }
+  
+  updateEvent(event:EventModel):Observable<any> {
+    const url:string = this.baseUrl + "/event/update"
+
+    return this.http.put<any>(url, event)
+  }
 
   getUserEvents():Observable<EventModel[]> {
     const url = this.baseUrl + "/event/user"

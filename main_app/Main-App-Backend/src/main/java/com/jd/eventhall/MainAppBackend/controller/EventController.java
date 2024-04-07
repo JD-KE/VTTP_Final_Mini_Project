@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,9 +118,9 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createEvent(@RequestBody String request) {
-        System.out.println(request);
-        JsonReader reader = Json.createReader(new StringReader(request));
+    public ResponseEntity<String> createEvent(@RequestBody String event) {
+        System.out.println(event);
+        JsonReader reader = Json.createReader(new StringReader(event));
         JsonObject eventObject = reader.readObject();
         JsonObjectBuilder builder = Json.createObjectBuilder();
         User user;
@@ -148,7 +149,7 @@ public class EventController {
             .toList();
         
 
-        Event event = Event.builder()
+        Event eventToCreate = Event.builder()
             .name(eventObject.getString("name"))
             .description(eventObject.getString("description"))
             .details(eventObject.getString("details"))
@@ -160,12 +161,67 @@ public class EventController {
         
         String eventId;
         try{
-            eventId = eventSvc.createEvent(event);
+            eventId = eventSvc.createEvent(eventToCreate);
         } catch (EventModelException ex) {
             builder.add("message", ex.getMessage());
             return ResponseEntity.status(400).body(builder.build().toString());
         }
         builder.add("eventId", eventId);
+        
+        return ResponseEntity.status(201).body(builder.build().toString());
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateEvent(@RequestBody String event) {
+        System.out.println(event);
+        JsonReader reader = Json.createReader(new StringReader(event));
+        JsonObject eventObject = reader.readObject();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        // User user;
+        List<GameSummary> games;
+        // try {
+        //     user = userSvc.getUserByUsername(eventObject.getString("userCreated"))
+        //         .orElseThrow();
+        // } catch (NoSuchElementException ex) {
+
+        //     return ResponseEntity.badRequest().body(
+        //         Json.createObjectBuilder()
+        //             .add("message", "User not found, event creation cancelled")
+        //             .build()
+        //             .toString()
+        //     );
+        // }
+        games = eventObject.getJsonArray("games").stream()
+            .map(jv -> {
+                JsonObject jsonGame = jv.asJsonObject();
+                return GameSummary.builder()
+                    .id(jsonGame.getInt("id"))
+                    .name(jsonGame.getString("name"))
+                    .coverUrl(jsonGame.getString("coverUrl", ""))
+                    .build(); 
+            })
+            .toList();
+        
+
+        Event eventToUpdate = Event.builder()
+            .id(eventObject.getString("id"))
+            .name(eventObject.getString("name"))
+            .description(eventObject.getString("description"))
+            .details(eventObject.getString("details"))
+            .startDate(eventObject.getJsonNumber("startTime").longValueExact())
+            .endDate(eventObject.getJsonNumber("endTime").longValueExact())
+            // .userCreatedId(user.getId())
+            .games(games)
+            .build();
+        
+        // String eventId;
+        try{
+            eventSvc.updateEvent(eventToUpdate);
+        } catch (EventModelException ex) {
+            builder.add("message", ex.getMessage());
+            return ResponseEntity.status(400).body(builder.build().toString());
+        }
+        builder.add("eventId", eventToUpdate.getId());
         
         return ResponseEntity.status(201).body(builder.build().toString());
     }
