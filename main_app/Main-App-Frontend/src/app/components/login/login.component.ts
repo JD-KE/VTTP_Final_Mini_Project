@@ -33,6 +33,5 @@ export class LoginComponent implements OnInit{
   processForm() {
     const loginDetails = this.form.value as UserLogin
     this.userSvc.login(loginDetails)
-    this.router.navigate(['/'])
   }
 }

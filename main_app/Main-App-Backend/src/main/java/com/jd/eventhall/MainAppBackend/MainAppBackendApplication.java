@@ -1,5 +1,6 @@
 package com.jd.eventhall.MainAppBackend;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,9 @@ import com.jd.eventhall.MainAppBackend.config.EnableCors;
 @SpringBootApplication
 public class MainAppBackendApplication {
 
+	@Value("${application.url}")
+	private String url;
+
 	public static void main(String[] args) {
 		SpringApplication.run(MainAppBackendApplication.class, args);
 	}
@@ -20,7 +24,7 @@ public class MainAppBackendApplication {
 	public WebMvcConfigurer corsConfigurer() {
 		// order at highest, or at -100 to get priority before security
 		// since we are here, remember to set secret key
-		String[] origins = new String[] {"http://localhost:4200"};
+		String[] origins = new String[] {url};
 		return new EnableCors("/**", origins);
 	}
 }

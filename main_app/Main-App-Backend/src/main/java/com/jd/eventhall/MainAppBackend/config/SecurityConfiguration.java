@@ -36,9 +36,12 @@ public class SecurityConfiguration {
                 .requestMatchers(
                 "/api/auth/**"
                 ,"/api/game/**"
-                // ,"/api/event/view/**"
+                ,"/api/event/view/**"
+                ,"/api/user/**"
                 ).permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
+                
             )
             .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)

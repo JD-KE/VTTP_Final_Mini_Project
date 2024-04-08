@@ -84,7 +84,7 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   }
   
   getGame(id:number) {
-    console.log(id)
+    // console.log(id)
     const dialogRef = this.dialog.open(GameComponent, {
       data:id,
     })
@@ -119,10 +119,13 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     if(!this.isEdit){
       this.createEventSub = this.eventSvc.createEvent(event).subscribe({
         next: value => {
-          console.log(value)
+          // console.log(value)
           alert('Event created')
           this.eventGamesStore.clearEventGames()
-          this.router.navigate(['/event'])
+          this.router.navigate(['/events'])
+        },
+        error: error => {
+          alert(error.error.message)
         },
         complete: () => this.createEventSub.unsubscribe()
       })
@@ -134,10 +137,13 @@ export class CreateEventComponent implements OnInit, OnDestroy{
 
       this.updateEventSub = this.eventSvc.updateEvent(event).subscribe({
         next: value => {
-          console.log(value)
+          // console.log(value)
           alert('Event updated')
           this.eventGamesStore.clearEventGames()
           this.router.navigate(['/event',this.id])
+        },
+        error: error => {
+          alert(error.error.message)
         },
         complete: () => this.updateEventSub.unsubscribe()
       })

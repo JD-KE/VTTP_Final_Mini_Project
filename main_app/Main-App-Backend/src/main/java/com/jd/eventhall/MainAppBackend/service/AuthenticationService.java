@@ -43,8 +43,8 @@ public class AuthenticationService {
 
     public Optional<AuthenticationResponse> register(RegisterRequest request) {
 
-        if (userRepo.getUserByUsername(request.getUsername()).isPresent() || 
-            userRepo.getUserByEmail(request.getEmail()).isPresent()) {
+        if (userRepo.usernameExists(request.getUsername()) || 
+            userRepo.emailExists(request.getEmail())) {
             return Optional.empty();
         }
 

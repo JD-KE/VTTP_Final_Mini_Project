@@ -57,9 +57,9 @@ import { DatePipe } from '@angular/common';
       config:{
         tokenGetter: (request) => {
           if(request?.url.includes('refresh-token')) {
-            return localStorage.getItem('eh_r_token')
+            return localStorage.getItem('refreshToken')
           }
-          return localStorage.getItem('eh_a_token')
+          return localStorage.getItem('accessToken')
         },
         allowedDomains:['localhost:8080','caring-sheep-production.up.railway.app'],
         disallowedRoutes:[

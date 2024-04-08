@@ -5,7 +5,7 @@ import { Tokens, User, UserLogin, UserRegister } from './model';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserStore } from './user.store';
-import { lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,15 +30,15 @@ export class UserService {
 
     lastValueFrom(this.http.post(url,''))
       .then(value => {
-        localStorage.removeItem("eh_a_token")
-        localStorage.removeItem("eh_r_token")
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
         this.isLoggedin = false
         this.userStore.removeUser()
       })
   }
 
   logBackIn() {
-    const token = localStorage.getItem("eh_a_token")
+    const token = localStorage.getItem("accessToken")
     console.log('testing logBackIn')
     console.log(!!token)
     if(!!token) {
@@ -61,12 +61,13 @@ export class UserService {
       .then(value => {
         console.log(value)
         this.setJwt(value)
-        console.log(localStorage.getItem("eh_a_token"))
-        console.log(localStorage.getItem("eh_r_token"))
-        const token = localStorage.getItem("eh_a_token")
+        console.log(localStorage.getItem("accessToken"))
+        console.log(localStorage.getItem("refreshToken"))
+        const token = localStorage.getItem("accessToken")
         if(!!token) {
           this.userStore.addUser(this.jwtHelper.decodeToken(token).sub)
         }
+        this.router.navigate(['/'])
       })
       .catch(error => {
         alert("Invalid login")
@@ -81,12 +82,13 @@ export class UserService {
       .then(value => {
         console.log(value)
         this.setJwt(value)
-        console.log(localStorage.getItem("eh_a_token"))
-        console.log(localStorage.getItem("eh_r_token"))
-        const token = localStorage.getItem("eh_a_token")
+        console.log(localStorage.getItem("accessToken"))
+        console.log(localStorage.getItem("refreshToken"))
+        const token = localStorage.getItem("accessToken")
         if(!!token) {
           this.userStore.addUser(this.jwtHelper.decodeToken(token).sub)
         }
+        this.router.navigate(['/'])
       })
       .catch(error => {
         alert(error.error.message)
@@ -95,12 +97,12 @@ export class UserService {
   }
 
   private setJwt(tokens:Tokens) {
-    localStorage.setItem("eh_a_token",tokens.access_token)
-    localStorage.setItem("eh_r_token", tokens.refresh_token)
+    localStorage.setItem("accessToken",tokens.access_token)
+    localStorage.setItem("refreshToken", tokens.refresh_token)
   }
 
   refreshToken() {
-    const refreshToken = localStorage.getItem("eh_r_token")
+    const refreshToken = localStorage.getItem("refreshToken")
     console.log('refresh token')
     if(!!refreshToken) {
       if(this.jwtHelper.isTokenExpired(refreshToken)) {
@@ -108,24 +110,11 @@ export class UserService {
         this.router.navigate([''])
       } else {
         const url = environment.backendBaseUrl + "/auth/refresh-token"
-        // this.http.post<any>(url,'').subscribe({
-        //   next: data => {
-        //     this.setJwt(data)
-        //     const token = localStorage.getItem("eh_a_token")
-        //     if(!!token) {
-        //       this.userStore.addUser(this.jwtHelper.decodeToken(token).sub)
-        //     }
-        //   },
-        //   error: error => {
-        //     alert('There was problem with the authentication. Please log back in')
-        //     this.router.navigate(['/login'])
-        //   }
-        // })
 
         lastValueFrom(this.http.post<any>(url,''))
           .then(value => {
             this.setJwt(value)
-            const token = localStorage.getItem("eh_a_token")
+            const token = localStorage.getItem("accessToken")
             if(!!token) {
               this.userStore.addUser(this.jwtHelper.decodeToken(token).sub)
             }
@@ -136,6 +125,18 @@ export class UserService {
           })
       }
     }
+  }
+
+  checkifUsernameExists(username:string):Observable<boolean> {
+    const url = environment.backendBaseUrl + "/user/check/username"
+
+    return this.http.post<boolean>(url,username)
+  }
+
+  checkifEmailExists(email:string):Observable<boolean> {
+    const url = environment.backendBaseUrl + "/user/check/email"
+
+    return this.http.post<boolean>(url,email)
   }
 
 }

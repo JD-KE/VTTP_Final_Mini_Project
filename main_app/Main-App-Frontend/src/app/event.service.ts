@@ -34,7 +34,7 @@ export class EventService {
   }
 
   getEventById(id:string):Observable<EventModel> {
-    const url = this.baseUrl.concat("/event/view",`/${id}`)
+    const url = this.baseUrl + `/event/view/${id}`
     return this.http.get<EventModel>(url)
   }
 }

@@ -20,4 +20,12 @@ public class UserService {
     public Optional<User> getUserById(String id) {
         return userRepo.getUserById(id);
     }
+
+    public boolean usernameExists(String username) {
+        return userRepo.usernameExists(username);
+    }
+
+    public boolean emailExists(String email) {
+        return userRepo.emailExists(email);
+    }
 }

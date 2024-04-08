@@ -99,7 +99,17 @@ public class UserRepo {
 		return rs.next();
     }
 
-    
+    public boolean usernameExists(String username) {
+        SqlRowSet rs = template.queryForRowSet(SQL_SELECT_USER_BY_USERNAME, username);
+        
+		return rs.next();
+    }
+
+    public boolean emailExists(String email) {
+        SqlRowSet rs = template.queryForRowSet(SQL_SELECT_USER_BY_EMAIL, email);
+        
+		return rs.next();
+    }
 
 
 }

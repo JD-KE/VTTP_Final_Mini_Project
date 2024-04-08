@@ -86,6 +86,7 @@ public class EventController {
 
     @GetMapping("/view/{id}")
     public ResponseEntity<String> getEventById(@PathVariable String id) {
+
         Event event;
         try {
             event = eventSvc.getEventById(id).orElseThrow();
@@ -118,13 +119,15 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createEvent(@RequestBody String event) {
-        System.out.println(event);
+    public ResponseEntity<String> createEvent(@RequestBody String event,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        // System.out.println(event);
         JsonReader reader = Json.createReader(new StringReader(event));
         JsonObject eventObject = reader.readObject();
         JsonObjectBuilder builder = Json.createObjectBuilder();
         User user;
         List<GameSummary> games;
+
         try {
             user = userSvc.getUserByUsername(eventObject.getString("userCreated"))
                 .orElseThrow();
@@ -137,6 +140,18 @@ public class EventController {
                     .toString()
             );
         }
+
+        String authToken = authHeader.substring(7);
+        String username = jwtSvc.extractUsername(authToken);
+        if(!username.equals(user.getUsername())) {
+            return ResponseEntity.badRequest().body(
+                Json.createObjectBuilder()
+                    .add("message", "User does not match authorized user, event creation cancelled")
+                    .build()
+                    .toString()
+            );
+        }
+
         games = eventObject.getJsonArray("games").stream()
             .map(jv -> {
                 JsonObject jsonGame = jv.asJsonObject();
@@ -172,25 +187,39 @@ public class EventController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateEvent(@RequestBody String event) {
-        System.out.println(event);
+    public ResponseEntity<String> updateEvent(@RequestBody String event,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        // System.out.println(event);
         JsonReader reader = Json.createReader(new StringReader(event));
         JsonObject eventObject = reader.readObject();
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        // User user;
+        User user;
         List<GameSummary> games;
-        // try {
-        //     user = userSvc.getUserByUsername(eventObject.getString("userCreated"))
-        //         .orElseThrow();
-        // } catch (NoSuchElementException ex) {
 
-        //     return ResponseEntity.badRequest().body(
-        //         Json.createObjectBuilder()
-        //             .add("message", "User not found, event creation cancelled")
-        //             .build()
-        //             .toString()
-        //     );
-        // }
+        try {
+            user = userSvc.getUserByUsername(eventObject.getString("userCreated"))
+                .orElseThrow();
+        } catch (NoSuchElementException ex) {
+
+            return ResponseEntity.badRequest().body(
+                Json.createObjectBuilder()
+                    .add("message", "User not found, event update cancelled")
+                    .build()
+                    .toString()
+            );
+        }
+
+        String authToken = authHeader.substring(7);
+        String username = jwtSvc.extractUsername(authToken);
+        if(!username.equals(user.getUsername())) {
+            return ResponseEntity.badRequest().body(
+                Json.createObjectBuilder()
+                    .add("message", "User does not match authorized user, event update cancelled")
+                    .build()
+                    .toString()
+            );
+        }
+
         games = eventObject.getJsonArray("games").stream()
             .map(jv -> {
                 JsonObject jsonGame = jv.asJsonObject();
@@ -201,7 +230,6 @@ public class EventController {
                     .build(); 
             })
             .toList();
-        
 
         Event eventToUpdate = Event.builder()
             .id(eventObject.getString("id"))
