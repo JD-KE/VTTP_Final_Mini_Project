@@ -1,118 +1,152 @@
-<mat-dialog-content>
-<h1>Search Games</h1>
 
-<form method="get" [formGroup]="form" (submit)="storeNewSearch()">
-    <label for="search"></label>
-    <input type="text" id="search" size="60" formControlName="search" (keyup)="searchGame(getValue($event))" >
-    <button type="submit" [disabled]="form.invalid">Submit</button>
+<div class="container d-flex justify-content-center">
+    <mat-dialog-content>
+    <div *ngIf="isDialog" class="row mb-3 sticky-top float-end">
+        <button type="button" mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="row text-center">
+        <h1>Search Games</h1>
+    </div>
+    <div class="row text-center" id="searchDiv">
+        <form method="get" [formGroup]="form" (submit)="storeNewSearch()">
+            <!-- <label for="search"></label>
+            <input type="text" id="search" size="60" formControlName="search" 
+            (keyup)="searchGame(getValue($event))" >
+            <button type="submit" [disabled]="form.invalid">Submit</button> -->
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Search Games</mat-label>
+                <input matInput type="text" id="search" size="60" formControlName="search" 
+                (keyup)="searchGame(getValue($event))">
+                <mat-hint>
+                    Type in your search term, and results will appear after a while.
+                </mat-hint>
+            </mat-form-field>
+            
+        </form>
+    </div>
     
-</form>
-<div *ngIf="!!searchTerm; else noSearch">
-    <ng-container *ngIf="gameResultsP$ | async as gameResults; else loading">
-        <ng-container *ngIf="resultsLength >0; else noResults">
-            <div *ngFor="let result of gameResults">
-                <ng-container *ngIf="isDialog; else notDialog">
-
-                    <table>
-                        <tr>
-                            <td>
-                                <div (click)="getGame(result.id)">
-                                    <ng-container *ngIf="!!result.coverUrl; else noImage">
-                                        <img [src]="result.coverUrl" alt="Cover for game">
-                                    </ng-container>
-                                
-                                    <ng-template #noImage>
-                                        <img src="/assets/no-image-icon.png" width="90px" alt="No image found">
-                                    </ng-template>
-                                </div>
-                            </td>
-                            <td>
-                                <h3>
-                                    <a (click)="getGame(result.id)">
-                                    {{result.name}} <span *ngIf="!!result.first_release_date">
-                                        ({{result.first_release_date|date:'y'}})
-                                    </span>
-                                    </a>
-                                </h3>
-                            
-                                <p>
-                                    {{GameCategory[result.category].replace('_',' ') | titlecase}}
-                                    <ng-container *ngIf="!!result.parent_game">
-                                        <span>of <a (click)="getGame(result.parent_game.id)">
-                                            {{result.parent_game.name}} 
-                                                <span *ngIf="!!result.parent_game.first_release_date">
-                                                    ({{result.parent_game.first_release_date|date:'y'}})
-                                                </span>
-                                            </a>
+    <br>
+    <div class="row text-center" *ngIf="!!searchTerm; else noSearch">
+        <ng-container *ngIf="gameResultsP$ | async as gameResults; else loading">
+            <ng-container *ngIf="resultsLength >0; else noResults">
+                <div class="ps-5" *ngFor="let result of gameResults">
+                    <ng-container *ngIf="isDialog; else notDialog">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div (click)="getGame(result.id)">
+                                        <ng-container *ngIf="!!result.coverUrl; else noImage">
+                                            <img [src]="result.coverUrl" [alt]="'Cover for ' +result.name">
+                                        </ng-container>
+                                    
+                                        <ng-template #noImage>
+                                            <img src="/assets/no-image-icon.png" width="90px" 
+                                            [alt]="'No image found for ' + result.name">
+                                        </ng-template>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h3>
+                                        <a (click)="getGame(result.id)">
+                                        {{result.name}} <span *ngIf="!!result.first_release_date">
+                                            ({{result.first_release_date|date:'y'}})
                                         </span>
-                                    </ng-container>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </ng-container>
-                
-                <ng-template #notDialog>
-                    <table>
-                        <tr>
-                            <td>
-                                <div [routerLink]="['/game',result.id]">
-                                    <ng-container *ngIf="!!result.coverUrl; else noImage">
-                                        <img [src]="result.coverUrl" alt="Cover for game">
-                                    </ng-container>
+                                        </a>
+                                    </h3>
                                 
-                                    <ng-template #noImage>
-                                        <img src="/assets/no-image-icon.png" width="90px" alt="No image found">
-                                    </ng-template>
-                                </div>
-                            </td>
-                            <td>
-                                <h3>
-                                    <a [routerLink]="['/game',result.id]">
-                                    {{result.name}} <span *ngIf="!!result.first_release_date">
-                                        ({{result.first_release_date|date:'y'}})
-                                    </span>
-                                    </a>
-                                </h3>
-                            
-                                <p>
-                                    {{GameCategory[result.category].replace('_',' ') | titlecase}}
-                                    <ng-container *ngIf="!!result.parent_game">
-                                        <span>of <a [routerLink]="['/game', result.parent_game.id]">
-                                            {{result.parent_game.name}} 
-                                                <span *ngIf="!!result.parent_game.first_release_date">
-                                                    ({{result.parent_game.first_release_date|date:'y'}})
-                                                </span>
-                                            </a>
+                                    <p>
+                                        {{GameCategory[result.category].replace('_',' ') | titlecase}}
+                                        <ng-container *ngIf="!!result.parent_game">
+                                            <span>of <a (click)="getGame(result.parent_game.id)">
+                                                {{result.parent_game.name}} 
+                                                    <span *ngIf="!!result.parent_game.first_release_date">
+                                                        ({{result.parent_game.first_release_date|date:'y'}})
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </ng-container>
+                                        <ng-container *ngIf="!!result.platforms">
+                                            <br>
+                                            Platforms: {{result.platforms}}
+                                        </ng-container>
+                                    </p>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                    </ng-container>
+                    
+                    <ng-template #notDialog>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div [routerLink]="['/game',result.id]">
+                                        <ng-container *ngIf="!!result.coverUrl; else noImage">
+                                            <img [src]="result.coverUrl" alt="Cover for game">
+                                        </ng-container>
+                                    
+                                        <ng-template #noImage>
+                                            <img src="/assets/no-image-icon.png" width="90px" alt="No image found">
+                                        </ng-template>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h3>
+                                        <a [routerLink]="['/game',result.id]">
+                                        {{result.name}} <span *ngIf="!!result.first_release_date">
+                                            ({{result.first_release_date|date:'y'}})
                                         </span>
-                                    </ng-container>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </ng-template>
-                
-            </div>
+                                        </a>
+                                    </h3>
+                                
+                                    <p>
+                                        {{GameCategory[result.category].replace('_',' ') | titlecase}}
+                                        <ng-container *ngIf="!!result.parent_game">
+                                            <span>of <a [routerLink]="['/game', result.parent_game.id]">
+                                                {{result.parent_game.name}} 
+                                                    <span *ngIf="!!result.parent_game.first_release_date">
+                                                        ({{result.parent_game.first_release_date|date:'y'}})
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </ng-container>
+                                        <ng-container *ngIf="!!result.platforms">
+                                            <br>
+                                            Platforms: {{result.platforms}}
+                                        </ng-container>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </ng-template>
+                    
+                </div>
+            </ng-container>
         </ng-container>
-    </ng-container>
+    </div>
+    
+    <div class="game-paginator">
+        <mat-paginator [length]="resultsLength || 0"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex"
+        (page)="handlePageEvent($event)"
+        [showFirstLastButtons]="true"  ></mat-paginator>
+    </div>
+    
+    </mat-dialog-content>
 </div>
 
-<mat-paginator [length]="resultsLength || 0"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    [pageIndex]="pageIndex"
-    (page)="handlePageEvent($event)"
-    [showFirstLastButtons]="true" ></mat-paginator>
-</mat-dialog-content>
-
 <ng-template #noResults>
-    <h2>No results</h2>
+    <h2 class="text-center mb-3">No results</h2>
 </ng-template>
 
 <ng-template #noSearch>
-    <h2>Nothing here, start searching!</h2>
+    <h2 class="text-center mb-3">Nothing here, start searching!</h2>
 </ng-template>
 
 <ng-template #loading>
-    <mat-spinner></mat-spinner>
+    <mat-spinner class="px-0 mx-auto mb-5"></mat-spinner>
 </ng-template>

@@ -34,6 +34,9 @@ export class RegisterComponent {
 
   processForm() {
     const registerDetails = this.form.value as UserRegister
+    registerDetails.username = registerDetails.username.trim()
+    registerDetails.password = registerDetails.password.trim()
+    registerDetails.email = registerDetails.email.trim()
     this.userSvc.register(registerDetails)
   }
 

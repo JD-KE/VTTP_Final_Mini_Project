@@ -1,6 +1,134 @@
-<p>create-event works!</p>
+<div class="container d-flex justify-content-center">
+    
+    <form [formGroup]="form" (submit)="processBooking()">
+        <div class="row my-3">
+            <h1 class="text-center">{{isEdit ? 'Edit Event' : 'Create Event'}}</h1>
+        </div>
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Event name</mat-label>
+                <input matInput type="text" id="name" formControlName="name">
+                <mat-error *ngIf="form.get('name')?.hasError('required') &&
+                form.get('name')?.touched">Event name is required</mat-error>
+            </mat-form-field>
+        </div>
 
-<form [formGroup]="form" (submit)="processBooking()">
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Event Description</mat-label>
+                <textarea matInput id="description"
+                 rows="5" formControlName="description">
+                </textarea>
+                <mat-error *ngIf="form.get('description')?.hasError('required') &&
+                form.get('description')?.touched">Description is required</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+
+                <mat-label>Event Start Time</mat-label>
+                <mat-datetimepicker-toggle
+                    [for]="startTimePicker"
+                    matSuffix
+                ></mat-datetimepicker-toggle>
+                <mat-datetimepicker
+                    #startTimePicker
+                    type="datetime"
+                    [openOnFocus]="true"
+                    [timeInterval]="5"
+                    mode="portrait"
+                ></mat-datetimepicker>
+                <input matInput [matDatetimepicker]="startTimePicker" id="startTime"
+                 formControlName="startTime">
+
+                <mat-error *ngIf="form.get('startTime')?.getError('required') 
+                && form.get('startTime')?.touched">Start time is required</mat-error>
+                
+                <mat-error *ngIf="form.getError('laterThanCurrentDateTime','startTime')
+                && form.get('startTime')?.touched">Start time should not be before current time</mat-error>
+            </mat-form-field>
+            
+        </div>
+
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+
+                <mat-label>Event end Time</mat-label>
+                <mat-datetimepicker-toggle
+                    [for]="endTimePicker"
+                    matSuffix
+                ></mat-datetimepicker-toggle>
+                <mat-datetimepicker
+                    #endTimePicker
+                    type="datetime"
+                    [openOnFocus]="true"
+                    [timeInterval]="5"
+                    mode="portrait"
+                ></mat-datetimepicker>
+                <input matInput [matDatetimepicker]="endTimePicker" id="endTime"
+                 formControlName="endTime">
+
+                <mat-error *ngIf="form.get('endTime')?.getError('required') 
+                && form.get('endTime')?.touched">End time is required</mat-error>
+
+                <mat-error *ngIf="form.getError('laterThanCurrentDateTime','endTime')
+                && form.get('endTime')?.touched">End time should not be before current time</mat-error>
+
+                <mat-error *ngIf="form.getError('endLaterThanStart')
+                && form.get('endTime')?.touched">End Time should not be before Start Time</mat-error>
+            </mat-form-field>
+            
+            
+        </div>
+        <hr>
+        <div class="row my-3">
+            <button class="my-3" mat-raised-button color="primary"
+             type="button" (click)="openSearch()">
+                Add Games
+            </button>
+
+            <button class="mb-3"  mat-stroked-button color="primary" 
+            *ngIf="!!eventGames.length" type="button" (click)="toggleGames()">
+                {{showGames ? 'Hide': 'Show'}} Games
+            </button>
+
+            <div *ngIf="showGames" class="d-flex flex-column justify-content-center text-center">
+                <ng-container *ngIf="eventGames$ |async as games">
+                    <ng-container *ngFor="let game of games as GameSummary">
+                        <div class="p-2 d-flex justify-content-center align-items-center">
+                            <img [src]="game.coverUrl" alt="">
+                            <a class="p-2" (click)="getGame(game.id)">{{game.name}}</a>
+                            <button type="button" mat-icon-button (click)="deleteGameFromStore(game.id)">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+            
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <mat-form-field [hideRequiredMarker]="true" style="width:50vw;min-width: 236px;">
+                <mat-label >Event Details</mat-label>
+                <textarea matInput id="details"
+                    rows="5" formControlName="details">
+                </textarea>
+                
+            </mat-form-field>
+        </div>
+
+        <div class="row mb-3">
+            <button mat-raised-button color="warn" type="submit" [disabled]="form.invalid || !hasGame">
+                {{isEdit ? 'Save Changes' : 'Create Event'}}
+            </button>
+        </div>
+        
+    </form>
+</div>
+
+<!-- <form [formGroup]="form" (submit)="processBooking()">
     <table border="1px">
         <tr>
             <td>
@@ -96,11 +224,5 @@
             </td>
         </tr>
     </table>
-    <!-- <p>
-        {{form.get('startTime')?.errors | json}}
-    </p>
-    <p>
-        {{form.errors| json}}
-    </p> -->
     
-</form>
+</form> -->

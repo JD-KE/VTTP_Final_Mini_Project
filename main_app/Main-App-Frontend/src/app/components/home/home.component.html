@@ -1,14 +1,47 @@
-<p>home works!</p>
 
-<!-- <p>Logged in: {{isLoggedIn}}</p>
-<p *ngIf="!!user">User is: {{user}}</p>
-<button type="button" *ngIf="!!user" (click)="logout()">Logoff</button> -->
-
-<div *ngIf="!!user">
-    <p>Welcome back, {{user}}</p>
-    <button type="button" (click)="logout()">Logout</button>
+<div class="container">
+    <div class="row my-5">
+        <div class="col p-5 mb-4 bg-body-tertiary rounded-3">
+            <h1>
+                Welcome to Event Hall
+            </h1>
+            <p>
+                A webapp to create and share game related events.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-body-tertiary rounded-3">
+                <h2>
+                    Search for Games with IGDB
+                </h2>
+                <p>Event Hall uses a subset of data from IGDB to allow users
+                    to search for games to be played/watched/etc. in theier events.
+                    Games can be browsed first either before or during 
+                    during event creation for users to decide what games to include in their events.
+                </p>
+                <button class="my-3" mat-raised-button color="primary" type="button" [routerLink]="['/game']">
+                    Click here to search for some games.
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-body-tertiary rounded-3">
+                <h2>
+                    Create Your Own Gaming-related Event
+                </h2>
+                <p>
+                    Create events using a simple format and send the resulting links to people
+                    you would like to invite. View your created events in a convenient event hub.
+                </p>
+                <button class="my-3" mat-raised-button color="primary" type="button" [routerLink]="['/event/create']">
+                    Click here to create a new event.
+                </button>
+                <button mat-raised-button color="primary" type="button" [routerLink]="['/events']">
+                    Click here to view your created events.
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<div *ngIf="!!!user">
-    <button type="button" [routerLink]="['/login']">Login</button>
-</div>
-

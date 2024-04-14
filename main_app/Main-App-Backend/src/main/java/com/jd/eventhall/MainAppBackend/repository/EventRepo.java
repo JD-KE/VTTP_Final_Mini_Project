@@ -1,7 +1,9 @@
 package com.jd.eventhall.MainAppBackend.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,26 @@ public class EventRepo {
     @Autowired
     private JdbcTemplate template;
 
+    public static final String SQL_COUNT_ALL_EVENTS = """
+            select count(*) from events
+            """;
+
+    public static final String SQL_COUNT_USER_EVENTS = """
+        select count(*) from events where user_created like ?
+        """;
+
     public static final String SQL_SELECT_EVENT_BY_ID = """
             select * from events where id like ?
             """;
+
     public static final String SQL_SELECT_EVENT_BY_USER_ID = """
-        select * from events where user_created like ?
+        select * from events where user_created like ? order by date_start desc, date_end desc
         """;
+
+    public static final String SQL_SELECT_EVENT_BY_USER_ID_PAGINATED = """
+        select * from events where user_created like ? order by date_start desc, date_end desc limit ? offset ?
+        """;
+
     public static final String SQL_SELECT_EVENT_GAME_BY_ID = """
         select * from eventgames where id like ?
         """;
@@ -55,6 +71,19 @@ public class EventRepo {
                 where id = ?
             """;
 
+    public static final String SQL_COUNT_GAMES_PER_EVENT = """
+        select event_id, count(event_id)
+            from eventgames
+            group by event_id;
+            """;
+    public static final String SQL_MAX_GAMES_IN_EVENT = """
+        select max(event_games_per_event.games_count) from(
+select event_id, count(event_id) as games_count
+	from eventgames
+    group by event_id
+) as event_games_per_event;
+            """;
+
     public Optional<Event> getEventsById(String id) {
         SqlRowSet rs = template.queryForRowSet(SQL_SELECT_EVENT_BY_ID, id);
         Event event;
@@ -76,6 +105,26 @@ public class EventRepo {
     }
     public List<Event> getEventsByUserId(String id) {
         SqlRowSet rs = template.queryForRowSet(SQL_SELECT_EVENT_BY_USER_ID, id);
+        List<Event> events = new ArrayList<>();
+        while(rs.next()) {
+            Event event = Event.builder()
+                .id(rs.getString("id"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .details(rs.getString("details"))
+                .startDate(rs.getLong("date_start"))
+                .endDate(rs.getLong("date_end"))
+                .userCreatedId(rs.getString("user_created"))
+                .build();
+            events.add(event);
+        }
+
+        return events;
+    }
+
+    public List<Event> getEventsByUserId(String id, int page, int limit) {
+        SqlRowSet rs = template.queryForRowSet(SQL_SELECT_EVENT_BY_USER_ID_PAGINATED,
+         id, limit, (page-1)*limit);
         List<Event> events = new ArrayList<>();
         while(rs.next()) {
             Event event = Event.builder()
@@ -161,9 +210,34 @@ public class EventRepo {
 		return rs.next();
     }
 
-    
+    public int countEvents() {
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_ALL_EVENTS);
+        rs.next();
+        return rs.getInt(1);
+    }
 
-    
+    public int countEvents(String userId) {
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_ALL_EVENTS, userId);
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    public Map<String, Integer> getGamesCountPerEvent() {
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_GAMES_PER_EVENT);
+        Map<String,Integer> gamesPerEvent = new HashMap<>();
+
+        while(rs.next()) {
+            gamesPerEvent.put(rs.getString("event_id"), rs.getInt("games_count"));
+        }
+
+        return gamesPerEvent;
+    }
+
+    public int getMaxGamesInEvent() {
+        SqlRowSet rs = template.queryForRowSet(SQL_MAX_GAMES_IN_EVENT);
+        rs.next();
+        return rs.getInt(1);
+    }
 
 
 }

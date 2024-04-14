@@ -32,6 +32,8 @@ export class LoginComponent implements OnInit{
 
   processForm() {
     const loginDetails = this.form.value as UserLogin
+    loginDetails.username = loginDetails.username.trim()
+    loginDetails.password = loginDetails.password.trim()
     this.userSvc.login(loginDetails)
   }
 }

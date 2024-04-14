@@ -1,5 +1,7 @@
 package com.jd.eventhall.MainAppBackend.repository;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,15 @@ public class UserRepo {
     public static final String SQL_INSERT_USER = """
         insert into users(id,username,email,password,role) values (?,?,?,?,?)
         """;
-        
+    
+    public static final String SQL_COUNT_EVENTS_PER_USER ="""
+        select users.id, count(user_created) as events_count
+            from users
+            join events
+            on events.user_created = users.id
+            group by users.id;
+            """;
+    
 
     @Autowired
     private JdbcTemplate template;
@@ -111,5 +121,14 @@ public class UserRepo {
 		return rs.next();
     }
 
+    public Map<String,Integer> getEventCountPerUser() {
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_EVENTS_PER_USER);
+        Map<String,Integer> eventsPerUser = new HashMap<>();
 
+        while(rs.next()) {
+            eventsPerUser.put(rs.getString("id"), rs.getInt("events_count"));
+        }
+
+        return eventsPerUser;
+    }
 }

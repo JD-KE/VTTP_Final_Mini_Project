@@ -1,4 +1,4 @@
-<nav>
+<!-- <nav>
     <a mat-flat-button 
     [color]="rlahome.isActive ? 'primary':null" [routerLink]="['/home']" 
     routerLinkActive="active" ariaCurrentWhenActive="page"
@@ -9,4 +9,92 @@
     <a mat-flat-button [color]="rlaevent.isActive ? 'primary':null" 
     [routerLink]="['/events']" routerLinkActive="active" ariaCurrentWhenActive="page" 
     #rlaevent="routerLinkActive" [routerLinkActiveOptions]="{exact:false}">Events</a>
-</nav>
+</nav> -->
+
+<div>
+    <nav class="navbar navbar-expand-md" data-bs-theme="dark" style="background-color: #6610f2;">
+        <div>
+            <a class="navbar-brand" [routerLink]="['/home']">
+                Event Hall
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button> 
+        </div>
+            
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/home']" 
+                    routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/game']" 
+                    routerLinkActive="active" ariaCurrentWhenActive="page">Games</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/events']" 
+                    routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div>
+            <ng-container *ngIf="!!!user">
+                <button type="button" class="btn btn-outline-light me-2 mx-3"
+                [routerLink]="['/login']">Login</button>
+                <button type="button" class="btn btn-light mx-3 "
+                [routerLink]="['/register']">Sign-up</button>
+            </ng-container>
+            <ng-container *ngIf="!!user">
+                <span class="me-2 text-white">Welcome back, {{user}}</span>
+                <button type="button" class="btn btn-danger mx-3" (click)="logout()">Logout</button>
+            </ng-container>
+        </div>
+        
+        
+
+    </nav>
+</div>
+
+<!-- <div class="container-fluid sticky-top bg-white">
+    <header class="d-flex flex-wrap align-items-center justify-content-center
+     justify-content-md-evenly py-3 mb-4 border-bottom ">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a [routerLink]="['/home']" class="d-inline-flex link-body-emphasis text-decoration-none">
+                Event Hall
+            </a>
+        </div>
+    
+        <ul class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/home']" 
+                        routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/game']" 
+                        routerLinkActive="active" ariaCurrentWhenActive="page">Games</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/events']" 
+                    routerLinkActive="active" ariaCurrentWhenActive="page"
+                    [routerLinkActiveOptions]="{exact:false}">Events</a>
+            </li>
+        </ul>
+    
+        <div class="col-md-3 text-end">
+            <ng-container *ngIf="!!!user">
+                <button type="button" class="btn btn-outline-primary me-2"
+                [routerLink]="['/login']">Login</button>
+                <button type="button" class="btn btn-primary"
+                [routerLink]="['/register']">Sign-up</button>
+            </ng-container>
+            <ng-container *ngIf="!!user">
+                <span class="me-2">Welcome back, {{user}}</span>
+                <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
+            </ng-container>
+            
+        </div>
+    </header>
+</div> -->

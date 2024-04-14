@@ -19,7 +19,7 @@ public class GameRepo {
     @Autowired
     private MongoTemplate mongoTemplate;
     
-    public List<Document> testSearchGamesByName(String searchString, int page, int limit) {
+    public List<Document> searchGamesByName(String searchString, int page, int limit) {
         // Query query = new TextQuery(TextCriteria.forDefaultLanguage()
         //     .matchingPhrase(searchString)
         //     .caseSensitive(false))

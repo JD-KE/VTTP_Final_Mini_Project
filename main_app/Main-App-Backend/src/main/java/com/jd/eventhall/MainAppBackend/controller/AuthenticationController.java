@@ -3,7 +3,6 @@ package com.jd.eventhall.MainAppBackend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,13 +14,16 @@ import com.jd.eventhall.MainAppBackend.model.AuthenticationResponse;
 import com.jd.eventhall.MainAppBackend.model.RegisterRequest;
 import com.jd.eventhall.MainAppBackend.service.AuthenticationService;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
 @RestController
 @RequestMapping("/api/auth")
-// @CrossOrigin("*")
 public class AuthenticationController {
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     @Autowired
     private AuthenticationService authSvc;
@@ -62,7 +64,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
         @RequestBody AuthenticationRequest request
     ) {
-        
+        meterRegistry.counter("login_counter").increment();
         return ResponseEntity.ok(authSvc.authenticate(request));
     }
 
@@ -73,6 +75,7 @@ public class AuthenticationController {
         if(respObj.containsKey("message")){
             return ResponseEntity.status(respObj.getInt("status")).body(respObj.toString());
         }
+        meterRegistry.counter("refresh_token_counter").increment();
         return ResponseEntity.ok().body(respObj.toString());
     }
 }

@@ -25,6 +25,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { UserStore } from './user.store';
 import { EventComponent } from './components/event/event.component';
 import { DatePipe } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingComponent } from './components/loading/loading.component';
+import { LoadingService } from './loading.service';
 
 
 @NgModule({
@@ -38,7 +41,8 @@ import { DatePipe } from '@angular/common';
     EventsComponent,
     LoginComponent,
     RegisterComponent,
-    EventComponent
+    EventComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +71,8 @@ import { DatePipe } from '@angular/common';
           /.*\/api\/game\/.*/
         ]
       }
-    })
+    }),
+    NgbModule
   ],
   providers: [
     provideAnimationsAsync(),
@@ -75,7 +80,8 @@ import { DatePipe } from '@angular/common';
     EventGameStore,
     UserService,
     UserStore,
-    DatePipe
+    DatePipe,
+    LoadingService
   ],
   bootstrap: [AppComponent]
 })

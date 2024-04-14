@@ -5,7 +5,7 @@ export interface GameResult{
     parent_game:Game,
     first_release_date:Date,
     coverUrl:string
-    platform:string[]
+    platforms:string
 }
 
 export interface GameResults{
@@ -40,8 +40,9 @@ export interface Game{
     parent_game:Game,
     version_parent:Game,
     version_title:string,
-    coverUrl:string
-    releases:ReleaseDate[]
+    coverUrl:string,
+    releases:ReleaseDate[],
+    platforms:string
 }
 
 

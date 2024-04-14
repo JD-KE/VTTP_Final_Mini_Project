@@ -1,60 +1,33 @@
 package com.jd.eventhall.MainAppBackend.repository;
 
-import java.util.Date;
+import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 
-import jakarta.json.JsonObject;
 
 @Repository
 public class PlatformRepo {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    // public boolean collectionExists() {
-    //     return mongoTemplate.collectionExists("platform");
-    // }
+    public String getPlatforms(List<Integer> platformIds) {
+        Query query = new Query(Criteria.where("_id").in(platformIds));
+        List<Document> results = mongoTemplate.find(query,
+        Document.class,"platform");
 
-    // public boolean insertPlatform(JsonObject platform) {
-    //     Document doc = new Document("_id", platform.getInt("id"))
-    //         .append("name", platform.getString("name"))
-    //         .append("lastUpdated", new Date());
+        List<String> resultStrings = results.stream()
+            .map(doc -> doc.getString("name"))
+            .toList();
         
-    //     Document insertedDoc = mongoTemplate.insert(doc, "platform");
-    //     return insertedDoc.equals(doc);
-    // }
 
-    // public long collectionCount() {
-    //     return mongoTemplate.count(new Query(), "platform");
-    // }
+        return String.join(", ", resultStrings);
+    }
 
-    // public boolean updatePlatform(JsonObject platform) {
-    //     Query query = new Query(Criteria.where("_id").is(platform.getInt("id")));
-    //     Update update = new Update()
-    //         .set("name", platform.getString("name"))
-    //         .set("lastUpdated", new Date());
-        
-    //     UpdateResult result = mongoTemplate.upsert(query, update, "platform");
-    //     return result.getMatchedCount()>0 || result.getUpsertedId()!=null;
-    // }
-
-    // public boolean deletePlatform(int id) {
-    //     Query query = new Query(Criteria.where("_id").is(id));
-    //     DeleteResult result = mongoTemplate.remove(query, "platform");
-    //     return result.getDeletedCount()>0;
-    // }
-
-    // public boolean deleteCollection() {
-    //     mongoTemplate.dropCollection("platform");
-    //     return true;
-    // }
+    
 }

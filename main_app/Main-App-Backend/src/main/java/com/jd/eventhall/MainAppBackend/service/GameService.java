@@ -35,7 +35,7 @@ public class GameService {
         jsonObjectBuilder.add("totalCount", gameRepo.searchGameByNameCount(searchTerm));
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-        List<Document> results = gameRepo.testSearchGamesByName(searchTerm,page,limit);
+        List<Document> results = gameRepo.searchGamesByName(searchTerm,page,limit);
         for(Document result: results) {
             JsonObjectBuilder jsonObjectBuilderResults = Json.createObjectBuilder();
             jsonObjectBuilderResults.add("id", result.getInteger("_id"))
@@ -60,6 +60,11 @@ public class GameService {
                 jsonObjectBuilderResults.add("parent_game",
                     parentObjectBuilder);
                 
+            }
+            List<Integer> platformIds;
+            if((platformIds = result.getList("platforms", Integer.class)) != null) {
+                jsonObjectBuilderResults.add("platforms",
+                 platformRepo.getPlatforms(platformIds));
             }
            
             jsonArrayBuilder.add(jsonObjectBuilderResults);
@@ -113,6 +118,13 @@ public class GameService {
                 vParentObjectBuilder);
             jsonObjectBuilder.add("version_title", result.getString("version_title"));
         }
+
+        List<Integer> platformIds;
+        if((platformIds = result.getList("platforms", Integer.class)) != null) {
+            jsonObjectBuilder.add("platforms",
+                platformRepo.getPlatforms(platformIds));
+        }
+        
         return jsonObjectBuilder.build().toString();
     }
     

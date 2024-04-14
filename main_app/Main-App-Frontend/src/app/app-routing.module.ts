@@ -8,20 +8,23 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { EventComponent } from './components/event/event.component';
+import { alreadyAuthenticated, canLeaveCreateEditEvent, isAuthenticated } from './guards';
 
 const routes: Routes = [
-  {path:"", component:HomeComponent},
+  
   {path:"home", component:HomeComponent},
   {path:"game", component:SearchGamesComponent},
   {path:"game/:gameId", component:GameComponent},
   {path:"events", component:EventsComponent},
-  {path:"event/edit/:eventId", component:CreateEventComponent},
-  {path:"event/create", component:CreateEventComponent},
+  {path:"event/edit/:eventId", component:CreateEventComponent, canActivate:[isAuthenticated],
+  canDeactivate:[canLeaveCreateEditEvent]},
+  {path:"event/create", component:CreateEventComponent, canActivate:[isAuthenticated],
+   canDeactivate:[canLeaveCreateEditEvent]},
   {path:"event/:eventId", component:EventComponent},
   
-  {path:"login",component:LoginComponent},
-  {path:"register",component:RegisterComponent},
-  {path:"**", redirectTo:"/", pathMatch:"full"}
+  {path:"login",component:LoginComponent, canActivate:[alreadyAuthenticated]},
+  {path:"register",component:RegisterComponent, canActivate:[alreadyAuthenticated]},
+  {path:"**", redirectTo:"/home", pathMatch:"full"}
 ];
 
 @NgModule({

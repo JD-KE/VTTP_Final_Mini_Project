@@ -1,0 +1,15 @@
+.game-paginator {
+    display: flex;
+    justify-content: center;
+}
+
+td {
+    padding: 15px;
+    text-align: left;
+}
+
+#searchDiv {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 5rem; 
+}

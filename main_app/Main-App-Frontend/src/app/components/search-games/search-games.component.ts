@@ -37,7 +37,7 @@ export class SearchGamesComponent implements OnInit, OnDestroy{
     this.form = this.createForm()
     this.isDialog = this.data
     this.gameResultsSub = this.searchText$.pipe(
-      debounceTime(1000),
+      debounceTime(1200),
       distinctUntilChanged()
       ).subscribe(
         value => {
@@ -57,17 +57,23 @@ export class SearchGamesComponent implements OnInit, OnDestroy{
   }
       
   search() {
-    this.gameResultsP$ = this.gameSvc.getGamesResultsPromise(this.searchTerm, this.pageIndex+1, this.pageSize)
+    if(!!this.searchTerm) {
+      this.gameResultsP$ = this.gameSvc.getGamesResultsPromise(this.searchTerm, this.pageIndex+1, this.pageSize)
       .then(
         value => {
           this.resultsLength = value.totalCount
           return value.results;
         }
       )
+    } else {
+      this.pageIndex = 0
+      this.resultsLength = 0
+    }
+    
   }
 
   searchGame(searchTerm:string) {
-    this.searchTerm = searchTerm
+    this.searchTerm = searchTerm.trim()
     // console.log(searchTerm)
     this.pageIndex = 0
     this.searchText$.next(searchTerm)
@@ -81,7 +87,7 @@ export class SearchGamesComponent implements OnInit, OnDestroy{
   }
 
   getGame(id:number) {
-    console.log(id)
+    // console.log(id)
     const dialogRef = this.dialog.open(GameComponent, {
       data:id,
     })
@@ -89,7 +95,7 @@ export class SearchGamesComponent implements OnInit, OnDestroy{
   
   private createForm(): FormGroup {
     return this.fb.group({
-      search: this.fb.control<string>('', [ Validators.required ]),
+      search: this.fb.control<string>(''),
     })
   }
 

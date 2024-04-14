@@ -1,6 +1,75 @@
-<p>event works!</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-6 col-md-8 border border-black rounded">
+            <ng-container *ngIf="eventP$ | async as event;else noEvent">
+                <div class="d-flex flex-column justify-content-center text-center">
+                    <div class="my-3">
+                        <h1 class="text-capitalize">{{event.name}}</h1>
+                        <p>Created by {{event.userCreated}}</p>
+                        <button type="button" mat-stroked-button color="primary"
+                         (click)="getLink()">Copy Event Link</button>
+                    </div>
+                    <div class="mb-3">
+                        
+                    </div>
+                    <div class="mb-3">
+                        <p>Start Time: {{event.startTime | date:'medium'}}</p>
+                        <p>End Time: {{event.endTime | date:'medium'}}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3>Event Description</h3>
+                        <p>{{!!event.description ? event.description : 'No description provided'}}</p>
+                    </div>
 
-<div *ngIf="eventP$ | async as event;else noEvent">
+                    <div class="row mb-3" >
+                        <div class="col"></div>
+                        <div class="col-6 col-md-8">
+                            <h3>Games</h3>
+                            <button class="mb-3" mat-raised-button color="primary" *ngIf="!!event.games.length" type="button" (click)="toggleGames()">
+                                {{showGames ? 'Hide': 'Show'}} Games</button>
+                            <ng-container *ngIf="showGames">
+                                <ng-container *ngFor="let game of event.games">
+                                    <div class="d-flex align-items-center justify-content-center mb-3">
+                                        
+                                        <div class="">
+                                            <ng-container *ngIf="!!game.coverUrl; else noImage">
+                                                <img [src]="game.coverUrl" 
+                                                [alt]="'Cover for '  + game.name">
+                                            </ng-container>
+                                        
+                                            <ng-template #noImage>
+                                                <img src="/assets/no-image-icon.png" width="90px" 
+                                                [alt]="'No image found for ' + game.name">
+                                            </ng-template>
+                                            
+                                        </div>
+                                        <div class=" ms-3">
+                                            <a class="link-dark" (click)="getGame(game.id)">
+                                                {{game.name}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            
+                        </div>
+                        
+                        <div class="col"></div>
+                    </div>
+                    <div>
+                        <h3>Event Details</h3>
+                        <p>{{!!event.details ? event.details : 'No details provided'}}</p>
+                    </div>
+                </div>
+                
+            </ng-container>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<!-- <div *ngIf="eventP$ | async as event;else noEvent">
     <table>
         <tr>
             <td>Event Name:</td>
@@ -45,7 +114,7 @@
             <td>{{event.details}}</td>
         </tr>
     </table>
-</div>
+</div> -->
 
 <ng-template #noEvent>
     <h3>No such event exists</h3>

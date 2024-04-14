@@ -1,43 +1,47 @@
-<p>register works!</p>
-
-<div>
+<div class="container d-flex justify-content-center text-center">
     <form [formGroup]="form" (submit)="processForm()">
-        <table>
-            <tr>
-                <td><label for="email">Email:</label></td>
-                <td>
-                    <input type="email" id="email" formControlName="email">
-                    <span *ngIf="form.get('email')?.getError('emailExists')">Email Taken</span>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="username">Username:</label></td>
-                <td>
-                    <input type="text" id="username" formControlName="username">
-                </td>
-                <span *ngIf="form.get('username')?.getError('usernameExists')">Username Taken</span>
-            </tr>
-            <tr>
-                <td><label for="password">Password:</label></td>
-                <td>
-                    <input type="password" id="password" formControlName="password">
-                </td>
-                <span *ngIf="form.get('password')?.getError('invalidPassword')">
-                    Password must be between 10-64 characters, contain at least 1 Uppercase and 1 Lowercase alphabet, and at least 1 number
-                </span>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <button type="submit" [disabled]="form.invalid">Submit</button>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    Already have an account? <a [routerLink]="['/Login']">Login.</a>
-                </td>
-            </tr>
-        </table>
+        <div class="row mb-3 mt-5">
+            <h1>Register</h1>
+        </div>
+        
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" id="email" formControlName="email">
+                <mat-error *ngIf="form.get('email')?.hasError('required') &&
+                form.get('email')?.touched">Please fill in your email</mat-error>
+                <mat-error *ngIf="form.get('email')?.getError('emailExists')&&
+                form.get('email')?.touched">Email is already taken</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" id="username" formControlName="username">
+                <mat-error *ngIf="form.get('username')?.hasError('required') &&
+                form.get('username')?.touched">Username must not be empty</mat-error>
+                <mat-error *ngIf="form.get('username')?.getError('usernameExists')&&
+                form.get('username')?.touched">Username is already taken</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row mb-3 mb-lg-3 pb-5 pb-md-0">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" id="password" formControlName="password">
+                <mat-error *ngIf="form.get('password')?.hasError('required') &&
+                form.get('password')?.touched">Password must not be empty</mat-error>
+                <mat-error *ngIf="form.get('password')?.getError('invalidPassword') &&
+                form.get('password')?.touched">
+                    Password must be between 10-64 characters, contains at least 1 Uppercase and 1 Lowercase alphabet, and at least 1 number
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row mb-3">
+            <button type="button" [disabled]="form.invalid" mat-flat-button color="primary"
+            style="width:50vw;min-width: 236px;" (click)="processForm()">Register</button>
+        </div>
+        <div class="row">
+            <p>Already have an account? <a [routerLink]="['/login']">Login here.</a></p>
+        </div>
     </form>
 </div>

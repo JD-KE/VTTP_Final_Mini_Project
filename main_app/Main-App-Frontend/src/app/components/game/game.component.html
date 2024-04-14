@@ -1,32 +1,54 @@
 <mat-dialog-content>
-    <ng-container *ngIf="!isDialog">
-        <button [routerLink]="['/game']">Back to search</button>
-    </ng-container>
+    <div class="container" *ngIf="gameP$ |async as game; else noGame">
 
-    <div *ngIf="gameP$ |async as game; else noGame">
-        <ng-container *ngIf="isDialog && !inEventGameStore">
-            <button type="button" (click)="addGameToStore(game)">
-                Add to Event
+        <div *ngIf="isDialog" class="row ms-5 sticky-top float-end">
+            <button type="button" mat-icon-button mat-dialog-close>
+                <mat-icon>close</mat-icon>
             </button>
-        </ng-container>
-        <ng-container *ngIf="isDialog && inEventGameStore">
-            <button type="button" (click)="removeGameFromStore(game.id)">
-                Remove from Event
-            </button>
-        </ng-container>
-        <div>
-            <ng-container *ngIf="!!game.coverUrl; else noImage">
-                <img [src]="game.coverUrl" alt="Cover for game">
-            </ng-container>
-            <ng-template #noImage>
-                <img src="/assets/no-image-icon.png" alt="No image found">
-            </ng-template>
-            <h1>{{game.name}}</h1>
         </div>
+
+        <div *ngIf="!isDialog" class="row my-3 me-4 sticky-top float-end">
+            <button class="m-3 " mat-raised-button color="warn" [routerLink]="['/game']">
+                Back to search</button>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-auto">
+                <div class="row mb-3">
+                    <ng-container *ngIf="!!game.coverUrl; else noImage">
+                        <img [src]="game.coverUrl" alt="Cover for game">
+                    </ng-container>
+                    <ng-template #noImage>
+                        <img src="/assets/no-image-icon.png" alt="No image found">
+                    </ng-template>
+                </div>
+                <div class="row mb-3">
+                    <ng-container *ngIf="isDialog && !inEventGameStore">
+                        <button type="button" (click)="addGameToStore(game)">
+                            Add to Event
+                        </button>
+                    </ng-container>
+                    <ng-container *ngIf="isDialog && inEventGameStore">
+                        <button type="button" (click)="removeGameFromStore(game.id)">
+                            Remove from Event
+                        </button>
+                    </ng-container>
+                </div>
+                
+            </div>
+            <div class="col">
+                <h1>{{game.name}}</h1>
+                <p>First Release Date: {{game.first_release_date|date}}</p>
+                <p>Game Status: {{GameStatus[game.status].replace('_',' ') |titlecase}}</p>
+
+            </div>
+        </div>
+        
         <hr>
         <div>
-            <p>First Release Date: {{game.first_release_date|date}}</p>
-            <p>Game Status: {{GameStatus[game.status].replace('_',' ') |titlecase}}</p>
+            <p *ngIf="!!game.platforms">
+                Platforms: {{game.platforms}}
+            </p>
             <p>{{GameCategory[game.category].replace('_',' ') | titlecase}}
                 <ng-container *ngIf="!!game.parent_game">
                     <ng-container *ngIf="!!isDialog">

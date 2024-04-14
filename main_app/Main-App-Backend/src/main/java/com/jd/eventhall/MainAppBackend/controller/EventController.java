@@ -1,15 +1,12 @@
 package com.jd.eventhall.MainAppBackend.controller;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +33,6 @@ import jakarta.json.JsonReader;
 
 @RestController
 @RequestMapping("/api/event")
-// @CrossOrigin("*")
 public class EventController {
 
     @Autowired

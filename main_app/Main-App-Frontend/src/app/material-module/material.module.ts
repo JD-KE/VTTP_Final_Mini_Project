@@ -15,6 +15,11 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
+import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [],
@@ -34,7 +39,12 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatPaginatorModule,
     MatDialogModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatMomentDatetimeModule,
+    MatDatetimepickerModule,
+    MatMomentDateModule,
+    ClipboardModule,
+    MatSnackBarModule
   ],
   exports: [
     CommonModule,
@@ -52,7 +62,12 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatPaginatorModule,
     MatDialogModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatMomentDatetimeModule,
+    MatDatetimepickerModule,
+    MatMomentDateModule,
+    ClipboardModule,
+    MatSnackBarModule
   ]
 })
 export class MaterialModule { }

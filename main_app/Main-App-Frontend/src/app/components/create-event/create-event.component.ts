@@ -10,6 +10,7 @@ import { GameComponent } from '../game/game.component';
 import { UserStore } from '../../user.store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { LoadingOverlayRef, LoadingService } from '../../loading.service';
 
 @Component({
   selector: 'app-create-event',
@@ -17,14 +18,16 @@ import { DatePipe } from '@angular/common';
   styleUrl: './create-event.component.css'
 })
 export class CreateEventComponent implements OnInit, OnDestroy{
+
   private fb = inject(FormBuilder)
-  private dialog = inject(MatDialog);
+  private dialog = inject(MatDialog)
   private eventGamesStore = inject(EventGameStore)
   private eventSvc = inject(EventService)
   private userStore = inject(UserStore)
   private router = inject(Router)
   private activatedRoute = inject(ActivatedRoute)
   private datePipe = inject(DatePipe)
+  private loadingSvc = inject(LoadingService)
   
   
   form!:FormGroup
@@ -36,6 +39,9 @@ export class CreateEventComponent implements OnInit, OnDestroy{
   hasEventGameSub!:Subscription
   hasGame!:boolean
   createEventSub!:Subscription
+  hasProcessed = false
+  showGames = true
+  loadingRef!:LoadingOverlayRef
 
   id!:string
   event!:EventModel
@@ -66,6 +72,13 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     if (this.isEdit) {
       this.id = this.activatedRoute.snapshot.params['eventId']
       lastValueFrom(this.eventSvc.getEventById(this.id))
+        .then(value =>{
+          if(value.userCreated !== this.user) {
+            alert("Not the user who created this event, returning to events")
+            this.router.navigate(['/events'])
+          }
+          return value
+        })
         .then(value => {
 
           this.form.patchValue(value)
@@ -73,6 +86,7 @@ export class CreateEventComponent implements OnInit, OnDestroy{
           this.form.controls['endTime'].patchValue(this.datePipe.transform(value.endTime, 'yyyy-MM-ddTHH:mm'))
           this.eventGamesStore.addAllEventGamesFromExistingEvent(value.games)
         })
+      
     }
     
   }
@@ -99,16 +113,22 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     this.eventGamesStore.removeGameFromEvent(id)
   }
 
+  toggleGames() {
+    this.showGames = !this.showGames
+   }
+
   processBooking() {
-    
-    var event:EventModel = {
+    this.loadingRef = this.loadingSvc.open()
+    const event:EventModel = {
       ...this.form.value,
       startTime: new Date(this.form.get('startTime')?.value).getTime(),
       endTime: new Date(this.form.get('endTime')?.value).getTime(),
       userCreated:this.user,
       games:this.eventGames
     } as EventModel
-
+    event.name = event.name.trim()
+    event.description = event.description.trim()
+    event.details = event.details.trim()
     // console.log(event)
 
     // console.log(event.startTime)
@@ -120,29 +140,34 @@ export class CreateEventComponent implements OnInit, OnDestroy{
       this.createEventSub = this.eventSvc.createEvent(event).subscribe({
         next: value => {
           // console.log(value)
+          this.loadingRef.close()
           alert('Event created')
+          const eventId:string = value.eventId
           this.eventGamesStore.clearEventGames()
-          this.router.navigate(['/events'])
+          this.hasProcessed = true
+          this.router.navigate(['/event',eventId])
         },
         error: error => {
+          this.loadingRef.close()
           alert(error.error.message)
         },
         complete: () => this.createEventSub.unsubscribe()
       })
     } else {
-      event = {
-        ...event,
-        id: this.id
-      }
+
+      event.id = this.id
 
       this.updateEventSub = this.eventSvc.updateEvent(event).subscribe({
         next: value => {
           // console.log(value)
+          this.loadingRef.close()
           alert('Event updated')
           this.eventGamesStore.clearEventGames()
+          this.hasProcessed = true
           this.router.navigate(['/event',this.id])
         },
         error: error => {
+          this.loadingRef.close()
           alert(error.error.message)
         },
         complete: () => this.updateEventSub.unsubscribe()
@@ -156,8 +181,8 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     return this.fb.group({
       name: this.fb.control<string>('', [Validators.required,]),
       description: this.fb.control<string>('', [Validators.required,]),
-      startTime: this.fb.control<string>('', [startDateLaterThanNow(),Validators.required] ),
-      endTime: this.fb.control<string>('', [startDateLaterThanNow(),Validators.required,]),
+      startTime: this.fb.control<string>('', [Validators.required] ),
+      endTime: this.fb.control<string>('', [Validators.required,]),
       details: this.fb.control<string>('')
     },
     {validators:endLaterThanStart})
@@ -183,6 +208,12 @@ export const endLaterThanStart: ValidatorFn = (
 
   if(!!startTime && !!endTime) {
     const endLaterThanStart = (new Date(startTime).getTime() < new Date(endTime).getTime())
+    // for mat-error in endTime
+    if(!endLaterThanStart) {
+      control.get('endTime')?.setErrors({endLaterThanStart: {value: false}})
+    } else {
+      control.get('endTime')?.setErrors(null)
+    }
     return endLaterThanStart ? null : {endLaterThanStart: {value: false}}
   }
 

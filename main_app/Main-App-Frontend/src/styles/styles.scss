@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// $primary: mat.define-palette(mat.$indigo-palette);
+$primary: mat.define-palette(mat.$deep-purple-palette,A400);
+$accent:  mat.define-palette(mat.$amber-palette, A200, A100, A400);
+
+$theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+@include mat.all-component-themes($theme);
+
+@import '@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss';
+
+@include mat-datetimepicker-theme($theme);

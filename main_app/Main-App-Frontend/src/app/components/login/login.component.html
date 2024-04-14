@@ -1,32 +1,31 @@
-<p>login works!</p>
-
-<div>
+<div class="container d-flex text-center justify-content-center">
     <form [formGroup]="form" (submit)="processForm()">
-        <table>
-            <tr>
-                <td><label for="username">Username:</label></td>
-                <td>
-                    <input type="text" id="username" formControlName="username">
-                </td>
-            </tr>
-            <tr>
-                <td><label for="password">Password:</label></td>
-                <td>
-                    <input type="password" id="password" formControlName="password">
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <button type="submit">Submit</button>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    Don't have an account? <a [routerLink]="['/register']">Register.</a>
-                </td>
-            </tr>
-        </table>
+        <div class="row mb-3 mt-5">
+            <h1>Login</h1>
+        </div>
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" id="username" formControlName="username">
+                <mat-error *ngIf="form.get('username')?.hasError('required') &&
+                form.get('username')?.touched">Please fill in your username</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row mb-3">
+            <mat-form-field style="width:50vw;min-width: 236px;">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" id="password" formControlName="password">
+                <mat-error *ngIf="form.get('password')?.hasError('required') &&
+                form.get('password')?.touched">Please fill in your password</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row mb-3">
+            <button type="button" [disabled]="form.invalid" mat-flat-button color="primary"
+            style="width:50vw;min-width: 236px;" (click)="processForm()">Login</button>
+        </div>
+        <div class="row">
+            <p>Don't have an account? <a [routerLink]="['/register']">Register here.</a></p>
+        </div>
+        
     </form>
 </div>

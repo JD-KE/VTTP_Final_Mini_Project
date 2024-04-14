@@ -1,5 +1,7 @@
 package com.jd.eventhall.MainAppBackend.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,14 @@ public class TokenRepo {
 
     public static final String SQL_SELECT_TOKEN_BY_TOKEN = "select * from tokens where token = ?";
 
+    public static final String SQL_SELECT_All_TOKENS = """
+            select * from tokens
+            """;
+
+    public static final String SQL_COUNT_VALID_TOKENS = """
+            select count(*) from tokens where revoked = false or expired = false
+            """;
+
     public static final String SQL_REVOKE_TOKENS_BY_USERID = """
             update tokens set
             revoked = true,
@@ -36,6 +46,10 @@ public class TokenRepo {
         expired = true
         where token = ?;
         """;
+
+    public static final String SQL_DELETE_TOKEN_BY_ID = """
+            delete from tokens where id = ?
+            """;
 
     @Autowired
     private JdbcTemplate template;
@@ -57,6 +71,26 @@ public class TokenRepo {
         );
 
         return Optional.of(token);
+    }
+
+    public List<Token> getAllTokens() {
+        SqlRowSet rs = template.queryForRowSet(SQL_SELECT_All_TOKENS);
+        List<Token> tokens = new ArrayList<>();
+
+        while(rs.next()) {
+            Token token = new Token(
+                rs.getString("id"),
+                rs.getString("token"),
+                TokenType.BEARER,
+                rs.getBoolean("revoked"),
+                rs.getBoolean("expired"),
+                rs.getString("user_id")
+            );
+
+            tokens.add(token);
+        }
+
+        return tokens;
     }
 
     public boolean addToken(Token token) {
@@ -87,5 +121,17 @@ public class TokenRepo {
         SqlRowSet rs = template.queryForRowSet(SQL_SELECT_TOKEN_BY_ID, id);
         
 		return rs.next();
+    }
+
+    public boolean deleteTokenById(String id) {
+        int rowsUpdated = template.update(SQL_DELETE_TOKEN_BY_ID, id);
+
+        return rowsUpdated > 0;
+    }
+
+    public int countValidTokens() {
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_VALID_TOKENS);
+        rs.next();
+        return rs.getInt(1);
     }
 }
