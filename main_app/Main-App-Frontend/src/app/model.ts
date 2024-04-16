@@ -142,6 +142,13 @@ export interface EventResults{
     totalCount:number
 }
 
+export enum EventStatus{
+    unknown=0,
+    upcoming=1,
+    ongoing=2,
+    passed=3
+}
+
 export interface Tokens {
     access_token:string
     refresh_token:string

@@ -8,6 +8,7 @@
     </div>
     <div class="row mt-3 text-center">
         <h1>Search Games</h1>
+        <h5>with data from <a href="https://www.igdb.com/" target="_blank" rel="noopener noreferrer">IGDB</a></h5>
     </div>
     <div class="row text-center" id="searchDiv">
         <form method="get" [formGroup]="form" (submit)="storeNewSearch()">
@@ -58,22 +59,22 @@
                                 </td>
                                 <td>
                                     <h3>
-                                        <a (click)="getGame(result.id)">
+                                        <u><a (click)="getGame(result.id)">
                                         {{result.name}} <span *ngIf="!!result.first_release_date">
                                             ({{result.first_release_date|date:'y'}})
                                         </span>
-                                        </a>
+                                        </a></u>
                                     </h3>
                                 
                                     <p>
                                         {{GameCategory[result.category].replace('_',' ') | titlecase}}
                                         <ng-container *ngIf="!!result.parent_game">
-                                            <span>of <a (click)="getGame(result.parent_game.id)">
+                                            <span>of <u><a (click)="getGame(result.parent_game.id)">
                                                 {{result.parent_game.name}} 
                                                     <span *ngIf="!!result.parent_game.first_release_date">
                                                         ({{result.parent_game.first_release_date|date:'y'}})
                                                     </span>
-                                                </a>
+                                                </a></u>
                                             </span>
                                         </ng-container>
                                         <ng-container *ngIf="!!result.platforms">

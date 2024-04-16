@@ -13,3 +13,7 @@ td {
     position: -webkit-sticky;
     top: 5rem; 
 }
+
+u {
+    cursor: pointer;
+}

@@ -54,7 +54,21 @@
             <tbody>
                     <ng-container *ngFor="let event of events.results">
                         <tr>
-                            <td>{{event.name}}</td>
+                            <td>
+                                <p>{{event.name}}</p>
+                                <ng-container [ngSwitch]="getStatus(event)">
+                                    <span class="badge text-bg-secondary" *ngSwitchCase="-1">
+                                        Loading</span>
+                                    <span class="badge text-bg-primary" *ngSwitchCase="0">
+                                        {{EventStatus[getStatus(event)] | titlecase}}</span>
+                                    <span class="badge text-bg-primary" *ngSwitchCase="1">
+                                        {{EventStatus[getStatus(event)] | titlecase}}</span>
+                                    <span class="badge text-bg-success" *ngSwitchCase="2">
+                                        {{EventStatus[getStatus(event)] | titlecase}}</span>
+                                    <span class="badge text-bg-secondary" *ngSwitchCase="3">
+                                        {{EventStatus[getStatus(event)] | titlecase}}</span>
+                                </ng-container>
+                            </td>
                             <td>{{event.description}}</td>
                             <td>
                                 <p>{{event.startTime|date:'medium'}}</p>

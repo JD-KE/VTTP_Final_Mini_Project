@@ -25,12 +25,14 @@
                     </div>
                     <div class="row mb-3">
                         <ng-container *ngIf="isDialog && !inEventGameStore">
-                            <button type="button" (click)="addGameToStore(game)">
+                            <button mat-raised-button color="primary" type="button"
+                             (click)="addGameToStore(game)">
                                 Add to Event
                             </button>
                         </ng-container>
                         <ng-container *ngIf="isDialog && inEventGameStore">
-                            <button type="button" (click)="removeGameFromStore(game.id)">
+                            <button mat-raised-button color="warn" type="button"
+                             (click)="removeGameFromStore(game.id)">
                                 Remove from Event
                             </button>
                         </ng-container>
@@ -53,14 +55,16 @@
                     </p>
                     <p>{{GameCategory[game.category].replace('_',' ') | titlecase}}
                         <ng-container *ngIf="!!game.parent_game">
-                            <ng-container *ngIf="!!isDialog">
-                                <span>of {{game.parent_game.name}} 
+                            <ng-container *ngIf="isDialog">
+                                <span>of <u><a (click)="getGameDialog(game.parent_game.id)">
+                                    {{game.parent_game.name}} 
                                     <span *ngIf="!!game.parent_game.first_release_date">
                                         ({{game.parent_game.first_release_date|date:'y'}})
                                     </span>
+                                    </a></u>
                                 </span>
                             </ng-container>
-                            <ng-container *ngIf="!!!isDialog">
+                            <ng-container *ngIf="!isDialog">
                                 <span>of <a [routerLink]="['/game', game.parent_game.id]">
                                     {{game.parent_game.name}} 
                                     <span *ngIf="!!game.parent_game.first_release_date">

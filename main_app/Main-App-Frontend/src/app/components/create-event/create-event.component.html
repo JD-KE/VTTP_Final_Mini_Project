@@ -4,8 +4,12 @@
         <div class="row my-3">
             <h1 class="text-center">{{isEdit ? 'Edit Event' : 'Create Event'}}</h1>
         </div>
+        <div class="row mb-5 mx-auto w-25">
+            <button type="button" mat-raised-button color="warn"
+             [routerLink]="['/events']">Back to Events</button>
+        </div>
         <div class="row mb-3">
-            <mat-form-field style="width:50vw;min-width: 236px;">
+            <mat-form-field>
                 <mat-label>Event name</mat-label>
                 <input matInput type="text" id="name" formControlName="name">
                 <mat-error *ngIf="form.get('name')?.hasError('required') &&
@@ -14,7 +18,7 @@
         </div>
 
         <div class="row mb-3">
-            <mat-form-field style="width:50vw;min-width: 236px;">
+            <mat-form-field>
                 <mat-label>Event Description</mat-label>
                 <textarea matInput id="description"
                  rows="5" formControlName="description">
@@ -25,7 +29,7 @@
         </div>
 
         <div class="row mb-3">
-            <mat-form-field style="width:50vw;min-width: 236px;">
+            <mat-form-field>
 
                 <mat-label>Event Start Time</mat-label>
                 <mat-datetimepicker-toggle
@@ -52,7 +56,7 @@
         </div>
 
         <div class="row mb-3">
-            <mat-form-field style="width:50vw;min-width: 236px;">
+            <mat-form-field>
 
                 <mat-label>Event end Time</mat-label>
                 <mat-datetimepicker-toggle
@@ -111,7 +115,7 @@
         </div>
         <hr>
         <div class="row mb-3">
-            <mat-form-field [hideRequiredMarker]="true" style="width:50vw;min-width: 236px;">
+            <mat-form-field [hideRequiredMarker]="true">
                 <mat-label >Event Details</mat-label>
                 <textarea matInput id="details"
                     rows="5" formControlName="details">

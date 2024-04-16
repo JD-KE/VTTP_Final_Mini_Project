@@ -28,6 +28,7 @@ import { DatePipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingComponent } from './components/loading/loading.component';
 import { LoadingService } from './loading.service';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { LoadingService } from './loading.service';
     LoginComponent,
     RegisterComponent,
     EventComponent,
-    LoadingComponent
+    LoadingComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

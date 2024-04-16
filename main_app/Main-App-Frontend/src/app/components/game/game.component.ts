@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, Optional, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Game, GameCategory, GameRegion, GameStatus, GameSummary } from '../../model';
 import { GameService } from '../../game.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { EventGameStore } from '../../event-game.store';
 import { Subscription, lastValueFrom, map } from 'rxjs';
 import { LoadingOverlayRef, LoadingService } from '../../loading.service';
@@ -19,6 +19,7 @@ export class GameComponent implements OnInit, OnDestroy{
   private data = inject(MAT_DIALOG_DATA, {optional:true})
   private eventGamesStore = inject(EventGameStore)
   private loadingSvc = inject(LoadingService)
+  private dialog = inject(MatDialog)
 
   constructor() {
     
@@ -74,6 +75,13 @@ export class GameComponent implements OnInit, OnDestroy{
 
   removeGameFromStore(id:number) {
     this.eventGamesStore.removeGameFromEvent(id)
+  }
+
+  getGameDialog(id:number) {
+    // console.log(id)
+    const dialogRef = this.dialog.open(GameComponent, {
+      data:id,
+    })
   }
 
   private getGame(id:number):Promise<Game> {

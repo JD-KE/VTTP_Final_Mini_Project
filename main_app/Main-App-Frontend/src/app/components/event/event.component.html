@@ -20,7 +20,7 @@
                             
                         </div>
                         <div *ngIf="event.userCreated == (user)" class="mb-3">
-                            <button mat-raised-button color="warn" type="button">
+                            <button [routerLink]="['/event/edit',event.id]" mat-raised-button color="warn" type="button">
                                 Edit
                             </button>
                         </div>

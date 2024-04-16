@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { UserStore } from '../../user.store';
-import { Subscription, lastValueFrom } from 'rxjs';
+import { Subscription, interval, lastValueFrom } from 'rxjs';
 import { EventService } from '../../event.service';
-import { EventModel, EventResults } from '../../model';
+import { EventModel, EventResults, EventStatus } from '../../model';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -24,8 +24,15 @@ export class EventsComponent implements OnInit, OnDestroy {
   pageIndex:number = 0;
   pageSizeOptions = [5, 10, 25];
   pageEvent!:PageEvent;
+
+  currentDate!:Date
+  timeInterval!:any
+  EventStatus=EventStatus
   
   ngOnInit(): void {
+    this.timeInterval = setInterval(() => {
+      this.currentDate = new Date()
+    }, 1000);
 
     this.userSub = this.userStore.getLoggedinUser.subscribe(
       value => {
@@ -42,6 +49,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearInterval(this.timeInterval)
     this.userSub?.unsubscribe()
   }
 
@@ -54,6 +62,21 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.resultsLength = value.totalCount
         return value
       })
+  }
+
+  getStatus(event:EventModel):number {
+    const startTime = event.startTime
+    const endTime = event.endTime
+    if (this.currentDate < startTime) {
+      return 1
+    }
+    if (this.currentDate > endTime) {
+      return 3
+    }
+    if(this.currentDate >= startTime && this.currentDate <= endTime) {
+      return 2
+    }
+    return -1
   }
 
 }
