@@ -1,0 +1,5 @@
+#returnToSearch {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 5rem; 
+}

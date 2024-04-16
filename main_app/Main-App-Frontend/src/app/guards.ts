@@ -42,11 +42,23 @@ export const isAuthenticated:  CanActivateFn =
 export const canLeaveCreateEditEvent: CanDeactivateFn<CreateEventComponent> =
     (comp, _route, _state) => {
         const eventGameStore = inject(EventGameStore)
+        const userStore = inject(UserStore)
+        var userExists 
+        userStore.getLoggedinUser.pipe(
+            take(1)
+        ).subscribe(
+            value => userExists = !!value
+        )
+
         if(comp.hasProcessed)
             return true
         // if(!comp.form.dirty && comp.eventGames.length == 0)
         //     return true
-
+        if(!userExists) {
+            eventGameStore.clearEventGames()
+            return true
+        }
+        
         if(!comp.isEdit){
             const leave = confirm('You have not saved your event.\nAre you sure you want to leave?')
             if (leave) {
@@ -57,6 +69,7 @@ export const canLeaveCreateEditEvent: CanDeactivateFn<CreateEventComponent> =
             }
              
         } else {
+            
             const leave = confirm('You have not saved your changes.\nAre you sure you want to leave?')
             if (leave) {
                 eventGameStore.clearEventGames()

@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../environments/environment';
-import { EventModel } from './model';
+import { EventModel, EventResults } from './model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -31,6 +31,15 @@ export class EventService {
     const url = this.baseUrl + "/event/user"
 
     return this.http.get<EventModel[]>(url)
+  }
+
+  getUserEventsPage(page:number, limit:number):Observable<EventResults> {
+    const url = this.baseUrl + "/event/user"
+    const params = new HttpParams()
+      .set("page", page)
+      .set("limit", limit);
+
+    return this.http.get<EventResults>(url, {params:params})
   }
 
   getEventById(id:string):Observable<EventModel> {

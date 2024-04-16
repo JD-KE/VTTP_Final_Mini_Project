@@ -38,6 +38,7 @@ export class UserService {
         this.isLoggedin = false
         this.userStore.removeUser()
         this.loadingRef.close()
+        this.router.navigate([this.router.url])
       })
       .catch(error => {
         localStorage.removeItem("accessToken")
@@ -45,6 +46,7 @@ export class UserService {
         this.isLoggedin = false
         this.userStore.removeUser()
         this.loadingRef.close()
+        this.router.navigate([this.router.url])
       })
   }
 

@@ -217,7 +217,7 @@ select event_id, count(event_id) as games_count
     }
 
     public int countEvents(String userId) {
-        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_ALL_EVENTS, userId);
+        SqlRowSet rs = template.queryForRowSet(SQL_COUNT_USER_EVENTS, userId);
         rs.next();
         return rs.getInt(1);
     }

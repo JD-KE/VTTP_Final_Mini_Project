@@ -25,8 +25,10 @@ export interface EventGames{
 
 export interface ReleaseDate{
     date:Date,
+    human:string,
     platform:string,
-    status:number
+    status:number,
+    region:number
 }
 
 export interface Game{
@@ -41,7 +43,7 @@ export interface Game{
     version_parent:Game,
     version_title:string,
     coverUrl:string,
-    releases:ReleaseDate[],
+    releaseDates:ReleaseDate[],
     platforms:string
 }
 
@@ -133,6 +135,11 @@ export interface EventModel{
     games:GameSummary[]
     startTime:Date
     endTime:Date
+}
+
+export interface EventResults{
+    results:EventModel[]
+    totalCount:number
 }
 
 export interface Tokens {

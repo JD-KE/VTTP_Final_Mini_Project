@@ -131,11 +131,6 @@ export class CreateEventComponent implements OnInit, OnDestroy{
     event.details = event.details.trim()
     // console.log(event)
 
-    // console.log(event.startTime)
-    // console.log(new Date(event.startTime).toDateString())
-    // console.log(new Date(event.startTime).toISOString())
-    // console.log(new Date(event.startTime).toLocaleString())
-
     if(!this.isEdit){
       this.createEventSub = this.eventSvc.createEvent(event).subscribe({
         next: value => {

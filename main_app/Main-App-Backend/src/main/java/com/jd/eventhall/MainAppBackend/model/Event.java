@@ -1,6 +1,5 @@
 package com.jd.eventhall.MainAppBackend.model;
 
-import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

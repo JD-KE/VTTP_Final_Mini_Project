@@ -6,7 +6,7 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div class="row text-center">
+    <div class="row mt-3 text-center">
         <h1>Search Games</h1>
     </div>
     <div class="row text-center" id="searchDiv">
@@ -28,9 +28,18 @@
     </div>
     
     <br>
+    
     <div class="row text-center" *ngIf="!!searchTerm; else noSearch">
         <ng-container *ngIf="gameResultsP$ | async as gameResults; else loading">
             <ng-container *ngIf="resultsLength >0; else noResults">
+                <div class="game-paginator">
+                    <mat-paginator [length]="resultsLength || 0"
+                    [pageSize]="pageSize"
+                    [pageSizeOptions]="pageSizeOptions"
+                    [pageIndex]="pageIndex"
+                    (page)="handlePageEvent($event)"
+                    [showFirstLastButtons]="true"  ></mat-paginator>
+                </div>
                 <div class="ps-5" *ngFor="let result of gameResults">
                     <ng-container *ngIf="isDialog; else notDialog">
                         <table>
@@ -123,17 +132,16 @@
                     </ng-template>
                     
                 </div>
+                <div class="game-paginator">
+                    <mat-paginator [length]="resultsLength || 0"
+                    [pageSize]="pageSize"
+                    [pageSizeOptions]="pageSizeOptions"
+                    [pageIndex]="pageIndex"
+                    (page)="handlePageEvent($event)"
+                    [showFirstLastButtons]="true"  ></mat-paginator>
+                </div>
             </ng-container>
         </ng-container>
-    </div>
-    
-    <div class="game-paginator">
-        <mat-paginator [length]="resultsLength || 0"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        [pageIndex]="pageIndex"
-        (page)="handlePageEvent($event)"
-        [showFirstLastButtons]="true"  ></mat-paginator>
     </div>
     
     </mat-dialog-content>

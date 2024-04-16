@@ -92,6 +92,7 @@
             *ngIf="!!eventGames.length" type="button" (click)="toggleGames()">
                 {{showGames ? 'Hide': 'Show'}} Games
             </button>
+            <p *ngIf="!hasGame" class="text-center text-danger">Minimum of one game must be added</p>
 
             <div *ngIf="showGames" class="d-flex flex-column justify-content-center text-center">
                 <ng-container *ngIf="eventGames$ |async as games">

@@ -6,7 +6,6 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jd.eventhall.MainAppBackend.model.GameSummary;
 import com.jd.eventhall.MainAppBackend.repository.CoverRepo;
 import com.jd.eventhall.MainAppBackend.repository.GameRepo;
 import com.jd.eventhall.MainAppBackend.repository.PlatformRepo;
@@ -123,6 +122,23 @@ public class GameService {
         if((platformIds = result.getList("platforms", Integer.class)) != null) {
             jsonObjectBuilder.add("platforms",
                 platformRepo.getPlatforms(platformIds));
+        }
+
+        List<Integer> releaseDateIds;
+
+        if((releaseDateIds = result.getList("release_dates", Integer.class)) != null) {
+            List<Document> releaseDateDocs = releaseDateRepo.getReleaseDates(releaseDateIds);
+            JsonArrayBuilder rdBuilder = Json.createArrayBuilder();
+            for (Document doc:releaseDateDocs) {
+                rdBuilder.add(Json.createObjectBuilder()
+                .add("date", doc.getDate("date").getTime())
+                .add("human", doc.getString("human"))
+                .add("region",doc.getInteger("region"))
+                .add("platform",doc.getString("platform"))
+                );
+            }
+            jsonObjectBuilder.add("releaseDates",
+                rdBuilder);
         }
         
         return jsonObjectBuilder.build().toString();

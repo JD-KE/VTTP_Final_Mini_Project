@@ -17,9 +17,9 @@ const routes: Routes = [
   {path:"game/:gameId", component:GameComponent},
   {path:"events", component:EventsComponent},
   {path:"event/edit/:eventId", component:CreateEventComponent, canActivate:[isAuthenticated],
-  canDeactivate:[canLeaveCreateEditEvent]},
+  canDeactivate:[canLeaveCreateEditEvent],runGuardsAndResolvers: 'always'},
   {path:"event/create", component:CreateEventComponent, canActivate:[isAuthenticated],
-   canDeactivate:[canLeaveCreateEditEvent]},
+   canDeactivate:[canLeaveCreateEditEvent],runGuardsAndResolvers: 'always'},
   {path:"event/:eventId", component:EventComponent},
   
   {path:"login",component:LoginComponent, canActivate:[alreadyAuthenticated]},
@@ -28,7 +28,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation:'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

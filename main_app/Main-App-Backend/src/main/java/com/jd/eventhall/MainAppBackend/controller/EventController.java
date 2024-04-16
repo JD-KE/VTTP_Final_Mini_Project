@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jd.eventhall.MainAppBackend.config.JwtService;
@@ -46,13 +47,15 @@ public class EventController {
 
     @GetMapping("/user")
     public ResponseEntity<String> getUserEvents(
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+        @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
         
         String authToken = authHeader.substring(7);
         String username = jwtSvc.extractUsername(authToken);
 
-        List<Event> events = eventSvc.getEventsByUsername(username);
+        List<Event> events = eventSvc.getEventsByUsername(username,page,limit);
 
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
         for (Event event:events) {
@@ -76,8 +79,10 @@ public class EventController {
                 
             );
         }
+        objectBuilder.add("results", arrayBuilder);
+        objectBuilder.add("totalCount",eventSvc.getEventCountByUsername(username));
         
-        return ResponseEntity.ok().body(arrayBuilder.build().toString());
+        return ResponseEntity.ok().body(objectBuilder.build().toString());
     }
 
     @GetMapping("/view/{id}")

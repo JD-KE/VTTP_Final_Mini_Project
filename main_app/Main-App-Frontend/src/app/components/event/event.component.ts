@@ -6,6 +6,7 @@ import { EventModel } from '../../model';
 import { MatDialog } from '@angular/material/dialog';
 import { GameComponent } from '../game/game.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserStore } from '../../user.store';
 
 @Component({
   selector: 'app-event',
@@ -18,10 +19,13 @@ export class EventComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute)
   private dialog = inject(MatDialog)
   private _snackbar = inject(MatSnackBar)
+  private userStore = inject(UserStore)
 
   eventP$!:Promise<EventModel>
   id!:string
   idSub!:Subscription
+
+  user!:string
 
   showGames = true
   
@@ -33,7 +37,14 @@ export class EventComponent implements OnInit {
         // console.log(value)
         this.id = value
         this.eventP$ = lastValueFrom(this.eventSvc.getEventById(this.id))
+          .catch(error => {
+            return {} as EventModel
+          })
     })
+
+    this.userStore.getLoggedinUser.subscribe(
+      value => this.user = value
+    )
   }
 
   toggleGames() {
@@ -50,6 +61,5 @@ export class EventComponent implements OnInit {
   getLink() {
     navigator.clipboard.writeText(window.location.href)
     this._snackbar.open('Link copied', 'Close', {duration: 2000})
-    // return window.location.href
   }
 }

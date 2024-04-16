@@ -22,7 +22,7 @@ public class GameController {
     
     @GetMapping("/search")
     public ResponseEntity<String> searchGame(@RequestParam String searchTerm,
-    @RequestParam int page, int limit) {
+    @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
         if (page<=0 || limit <=0) {
             // System.out.println("No search term");
             return ResponseEntity.badRequest().build();

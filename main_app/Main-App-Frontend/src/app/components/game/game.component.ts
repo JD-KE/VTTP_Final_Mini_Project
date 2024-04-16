@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit, Optional, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Game, GameCategory, GameStatus, GameSummary } from '../../model';
+import { Game, GameCategory, GameRegion, GameStatus, GameSummary } from '../../model';
 import { GameService } from '../../game.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventGameStore } from '../../event-game.store';
 import { Subscription, lastValueFrom, map } from 'rxjs';
+import { LoadingOverlayRef, LoadingService } from '../../loading.service';
 
 @Component({
   selector: 'app-game',
@@ -17,6 +18,7 @@ export class GameComponent implements OnInit, OnDestroy{
   private router = inject(Router)
   private data = inject(MAT_DIALOG_DATA, {optional:true})
   private eventGamesStore = inject(EventGameStore)
+  private loadingSvc = inject(LoadingService)
 
   constructor() {
     
@@ -27,9 +29,12 @@ export class GameComponent implements OnInit, OnDestroy{
   idSub!:Subscription
   GameStatus=GameStatus
   GameCategory=GameCategory
+  GameRegion=GameRegion
   isDialog=false
   inEventGameStoreSub!:Subscription
   inEventGameStore = false
+
+  loadingRef!:LoadingOverlayRef
   
   ngOnInit(): void {
     // this.id = this.activatedRoute.snapshot.params['gameId']
@@ -78,6 +83,9 @@ export class GameComponent implements OnInit, OnDestroy{
           value.coverUrl = value.coverUrl.replace("t_thumb", "t_cover_big")
         }
         return value
+      })
+      .catch(error => {
+        return {} as Game
       })
   }
 }

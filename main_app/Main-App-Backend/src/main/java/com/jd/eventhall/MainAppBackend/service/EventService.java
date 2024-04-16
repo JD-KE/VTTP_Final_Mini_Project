@@ -75,7 +75,6 @@ public class EventService {
 
         }
 
-
         return events;
     }
 
